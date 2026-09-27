@@ -72,3 +72,5 @@ on("*", async (evt) => {
 });
 
 export { deliver as deliverWebhook };
+import "@/lib/cartera/eventos";
+import "@/lib/reservas/eventos";

@@ -33,7 +33,7 @@ export function PageHeader({
 
 export function Section({ titulo, acciones, children, className }: { titulo?: React.ReactNode; acciones?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cn("mb-6", className)}>
+    <section className={cn("mb-6 min-w-0", className)}>
       {(titulo || acciones) && (
         <div className="mb-2 flex items-center justify-between gap-2">
           {titulo && <h2 className="text-base font-semibold">{titulo}</h2>}

@@ -1,5 +1,11 @@
 /** Etiquetas en español natural para valores de enums (con tildes). */
 const OVERRIDES: Record<string, string> = {
+  // Gobierno (encuestas, votaciones, asambleas)
+  UNICA: "Opción única",
+  MULTIPLE: "Opción múltiple",
+  ESCALA: "Escala de 1 a 5",
+  UNANIME: "Unánime",
+  PODER: "Por poder",
   DANO_ZONA_COMUN: "Daño en zona común",
   DANO_UNIDAD: "Daño en unidad",
   PETICION: "Petición",
@@ -60,6 +66,75 @@ const OVERRIDES: Record<string, string> = {
   PAGADA: "Pagada",
   ANULADA: "Anulada",
   PARCIAL: "Parcial",
+  // Comunicaciones, documentos y calendario (fase 8)
+  REGLAMENTO: "Reglamento de PH",
+  MANUAL_CONVIVENCIA: "Manual de convivencia",
+  ESTADO_FINANCIERO: "Estados financieros",
+  FUMIGACION: "Fumigación",
+  CORTE_SERVICIO: "Corte de servicio",
+  CUIDADO_MASCOTAS: "Cuidado de mascotas",
+  TUTORIAS: "Tutorías",
+  ENVIANDO: "Enviando",
+  // Cartera (Fase 3)
+  WHATSAPP: "WhatsApp",
+  SMS: "SMS",
+  POR_COEFICIENTE: "Por coeficiente",
+  IGUAL_POR_UNIDAD: "Igual por unidad",
+  INTERES: "Intereses",
+  APERTURA: "Saldo de apertura",
+  EMPAREJADA: "Emparejada",
+  CREADA: "Pago creado",
+  IGNORADA: "Ignorada",
+  CUMPLIDO: "Cumplido",
+  INCUMPLIDO: "Incumplido",
+  // Portería
+  DANO: "Daño",
+  DOMICILIARIO: "Domiciliario",
+  ANULACION: "Anulación",
+  CRITICA: "Crítica",
+  TECNICO: "Técnico",
+  // Reservas y facturación electrónica (fase 5)
+  SIMULADO: "Simulado",
+  SALON: "Salón",
+  FACTUS: "Factus",
+  ALANUBE: "Alanube",
+  SIN_FACTURA: "Sin factura",
+  NO_APLICA: "No aplica",
+  EVENTO: "Evento del conjunto",
+  SOLO_FINES_SEMANA: "Solo fines de semana y festivos",
+  UN_TURNO_POR_DIA: "Un turno por día",
+  DIAS_PERMITIDOS: "Días permitidos",
+  MAX_ASISTENTES: "Máximo de asistentes",
+  // pagos en línea
+  SIMULADOR: "Simulador",
+  MERCADOPAGO: "Mercado Pago",
+  WOMPI: "Wompi",
+  COBRO_ADMINISTRACION: "Cobro de administración",
+  // Residentes: tipos de documento y alertas
+  CC: "Cédula de ciudadanía",
+  CE: "Cédula de extranjería",
+  TI: "Tarjeta de identidad",
+  RC: "Registro civil",
+  PA: "Pasaporte",
+  PEP: "Permiso especial de permanencia",
+  PPT: "Permiso por protección temporal",
+  NIT: "NIT",
+  FALSA_ALARMA: "Falsa alarma",
+  CONTRA_INCENDIO: "Contra incendios",
+  // Mantenimiento, proveedores y presupuesto
+  RUT: "RUT",
+  POLIZA: "Póliza",
+  PROGRAMADO: "Programado",
+  ACTIVO_QR: "QR del activo",
+  SOBREEJECUTADO: "Sobreejecutado",
+  // PQRS, convivencia, obras y mudanzas (fase 7)
+  FELICITACION: "Felicitación",
+  ESCALADO_MULTA: "Escalado a multa",
+  LEIDO: "Leído",
+  REMODELACION: "Remodelación",
+  PUBLICO: "Página pública",
+  APP: "App",
+  A_TIEMPO: "A tiempo",
 };
 
 export function label(v: string | null | undefined): string {
@@ -77,6 +152,7 @@ export function options<T extends string>(values: readonly T[] | Record<string, 
 type Tone = "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
 
 const TONES: Record<string, Tone> = {
+  CERRADA: "secondary",
   // positivos
   PAGADA: "success",
   APROBADO: "success",
@@ -101,6 +177,11 @@ const TONES: Record<string, Tone> = {
   // intermedios
   PENDIENTE: "warning",
   PARCIAL: "warning",
+  CUMPLIDO: "success",
+  INCUMPLIDO: "destructive",
+  EMPAREJADA: "success",
+  CREADA: "success",
+  IGNORADA: "secondary",
   SOLICITADA: "warning",
   EN_PORTERIA: "warning",
   ABIERTO: "info",
@@ -143,6 +224,39 @@ const TONES: Record<string, Tone> = {
   DEVUELTO: "secondary",
   INACTIVO: "secondary",
   BLOQUEADO: "destructive",
+  // Portería
+  USADA: "secondary",
+  INGRESO: "success",
+  SALIDA: "info",
+  ANULACION: "destructive",
+  DISPONIBLE: "success",
+  PRESTADO: "warning",
+  OCUPADO: "warning",
+  PERDIDO: "destructive",
+  MEDIA: "info",
+  ENVIANDO: "info",
+  FALSA_ALARMA: "secondary",
+  // Mantenimiento, proveedores y presupuesto
+  PAGADO: "success",
+  TERMINADO: "secondary",
+  PROGRAMADO: "info",
+  PREVENTIVO: "info",
+  CORRECTIVO: "warning",
+  LEGAL: "default",
+  DADO_DE_BAJA: "secondary",
+  SOBREEJECUTADO: "destructive",
+  // PQRS, convivencia, obras y mudanzas (fase 7)
+  LEIDO: "info",
+  RESPONDIDO: "info",
+  ESCALADO_MULTA: "warning",
+  EN_MEDIACION: "info",
+  ACUERDO: "success",
+  ESCALADO: "destructive",
+  GRAVE: "destructive",
+  MODERADA: "warning",
+  LEVE: "secondary",
+  BAJA: "secondary",
+  A_TIEMPO: "success",
 };
 
 export function tone(v: string | null | undefined): Tone {

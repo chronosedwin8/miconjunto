@@ -210,6 +210,7 @@ export const MODULOS = {
     label: "Mantenimiento",
     acciones: {
       ver: "Ver planes y órdenes",
+      ver_todos: "Ver todas las órdenes (sin esto, solo las asignadas)",
       crear: "Crear planes y órdenes",
       gestionar: "Gestionar órdenes de trabajo",
       ejecutar: "Ejecutar órdenes asignadas",
@@ -498,6 +499,7 @@ export const DEFAULT_ROLE_PERMS: Record<RolBase, PermKey[]> = {
     "proveedores.ver",
     "activos.ver",
     "mantenimiento.ver",
+    "mantenimiento.ver_todos",
     "mantenimiento.crear",
     "estadisticas.ver",
     "emergencias.*",
@@ -528,6 +530,7 @@ export const DEFAULT_ROLE_PERMS: Record<RolBase, PermKey[]> = {
     "comunicaciones.ver",
     "obras.ver_todos",
     "calendario.ver",
+    "empleados.ver",
   ]),
   MANTENIMIENTO: match([
     "tickets.ver",

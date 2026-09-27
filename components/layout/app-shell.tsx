@@ -54,7 +54,7 @@ export async function AppShell({ ctx, children }: { ctx: Ctx; children: React.Re
             />
           </div>
         </header>
-        <main id="contenido" className="mx-auto w-full max-w-6xl flex-1 px-4 pb-28 pt-4 lg:px-8 lg:pb-10 lg:pt-6">
+        <main id="contenido" className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 pb-28 pt-4 lg:px-8 lg:pb-10 lg:pt-6">
           {children}
         </main>
       </div>

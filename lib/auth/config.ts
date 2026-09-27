@@ -7,6 +7,7 @@ export const PUBLIC_PREFIXES = [
   "/restablecer",
   "/invitacion",
   "/acceso",
+  "/acceso-visitante",
   "/pagar",
   "/verificar",
   "/c/",

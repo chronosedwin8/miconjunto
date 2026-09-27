@@ -23,7 +23,8 @@
     "screens": "tsx scripts/screens.ts",
     "icons": "tsx scripts/generate-icons.ts",
     "prepare": "husky",
-    "plantillas": "tsx scripts/generate-templates.ts"
+    "plantillas": "tsx scripts/generate-templates.ts",
+    "postinstall": "node scripts/fix-deps.cjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

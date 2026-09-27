@@ -18,7 +18,14 @@ async function cargarModulos(): Promise<SeedModule[]> {
   const files = fs.readdirSync(dir).filter((f) => /^\d{2}-.+\.ts$/.test(f) && !f.startsWith("00-")).sort();
   const out: SeedModule[] = [];
   for (const f of files) {
-    const mod = (await import(pathToFileURL(path.join(dir, f)).href)) as Record<string, unknown>;
+    let mod: Record<string, unknown>;
+    try {
+      mod = (await import(pathToFileURL(path.join(dir, f)).href)) as Record<string, unknown>;
+    } catch (e) {
+      // Un módulo que no carga no debe detener el resto del seed.
+      console.error(`❌ ${f} no se pudo cargar:`, (e as Error).message);
+      continue;
+    }
     const run = Object.entries(mod).find(([k, v]) => k.startsWith("seed") && typeof v === "function")?.[1] as SeedModule["run"] | undefined;
     if (run) out.push({ nombre: f.replace(/\.ts$/, ""), run });
   }

@@ -33,12 +33,12 @@ export function StatCard({
     danger: "text-destructive",
   }[tone];
   const body = (
-    <div className={cn("h-full rounded-xl border bg-card p-4", toneCls, href && "transition-colors hover:bg-muted/60", className)}>
+    <div className={cn("h-full min-w-0 rounded-xl border bg-card p-3 sm:p-4", toneCls, href && "transition-colors hover:bg-muted/60", className)}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-xs font-medium text-muted-foreground">{label}</p>
         {Icon && <Icon className="size-4 text-muted-foreground" />}
       </div>
-      <p className={cn("mt-1 text-2xl font-bold tabular-nums", valueCls)}>{value}</p>
+      <p className={cn("mt-1 break-words text-xl font-bold tabular-nums sm:text-2xl", valueCls)}>{value}</p>
       {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
     </div>
   );

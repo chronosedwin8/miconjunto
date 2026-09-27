@@ -53,11 +53,15 @@ async function main() {
     await page.waitForURL((u) => !u.pathname.startsWith("/login"), { timeout: 120000 });
     await page.waitForTimeout(1500);
     await page.waitForLoadState("networkidle");
-    if (page.url().includes("/seleccionar-conjunto")) {
+    // Usuarios con varios conjuntos (p. ej. administrador): elegir el demo, con reintentos.
+    for (let intento = 0; intento < 4; intento++) {
+      await page.goto(`${BASE}/inicio`, { waitUntil: "networkidle", timeout: 120000 });
+      if (!page.url().includes("/seleccionar-conjunto")) break;
       await page.locator("form button", { hasText: "Conjunto Residencial Demo" }).click();
-      await page.waitForURL((u) => u.pathname.startsWith("/inicio"), { timeout: 120000 });
-      await page.waitForLoadState("networkidle");
+      await page.waitForURL((u) => !u.pathname.startsWith("/seleccionar-conjunto"), { timeout: 60000 }).catch(() => undefined);
+      await page.waitForTimeout(1500);
     }
+    if (page.url().includes("/seleccionar-conjunto")) errors.push("[login] no se pudo seleccionar el conjunto demo");
   }
   fs.mkdirSync("screenshots-tmp", { recursive: true });
   for (const p of paths.length ? paths : ["/inicio"]) {

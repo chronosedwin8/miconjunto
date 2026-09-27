@@ -162,3 +162,36 @@
 .no-scrollbar {
   scrollbar-width: none;
 }
+
+/* Paleta de datos (validada: skill dataviz, orden fijo de categorías) */
+:root {
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-7: #4a3aa7;
+  --series-8: #e34948;
+  --viz-grid: #e1e0d9;
+  --viz-axis: #898781;
+  --viz-baseline: #c3c2b7;
+  --viz-surface: #fcfcfb;
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+}
+.dark {
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+  --viz-grid: #2c2c2a;
+  --viz-baseline: #383835;
+  --viz-surface: #1a1a19;
+}

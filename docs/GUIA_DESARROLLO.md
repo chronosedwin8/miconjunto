@@ -78,7 +78,7 @@ export const guardarXAction = action({ perm: "x.crear", schema }, async (input, 
 
 ## 7. Seed
 
-- `npm run seed` hace TRUNCATE de todo y recrea la demo (unos segundos). Puedes ejecutarlo; los módulos se ejecutan en orden de archivo y un error en uno no detiene los demás.
+- `npm run seed` hace TRUNCATE de todo y recrea la demo (~1 min); los módulos se ejecutan en orden de archivo y un error en uno no detiene los demás. **Mientras se desarrolla en paralelo no lo ejecutes**: prueba tu módulo con `npx tsx scripts/seed-uno.ts NN-modulo` (corre solo ese módulo sobre los datos existentes; tu módulo debe ser idempotente).
 - `state` trae `conjuntoId`, `users` (claves: superadmin, administrador, porteria, porteria2, consejo, propietario, residente, mantenimiento, contador, revisor, asistente, conviviente, proveedor), `roles`, `rng` (determinista: `rng.int`, `rng.pick`, `rng.chance`, `rng.shuffle`) y `now`.
 - Usuarios demo: `propietario@demo.co` = Laura, dueña de **T1-101** (familia con menor, adulto mayor con movilidad reducida, empleada doméstica, conviviente Valentina); `residente@demo.co` = Andrés, arrendatario de **T2-302**; `consejo@demo.co` = Ricardo, dueño de **T3-804**. Clave `Demo1234*`.
 - Usa `prisma` de `prisma/seed/util.ts` o los servicios con `systemCtx(conjuntoId)` (recomendado para cartera: `crearCargo`, `registrarPago`).
