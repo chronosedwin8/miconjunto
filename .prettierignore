@@ -1,0 +1,6 @@
+node_modules
+.next
+storage
+prisma/migrations
+public/sw.js
+screenshots-tmp

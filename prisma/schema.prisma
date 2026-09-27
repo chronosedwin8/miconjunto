@@ -1,0 +1,3067 @@
+// MiConjunto — modelo de datos
+// Convención: modelos y campos de dominio en español (vocabulario de propiedad horizontal),
+// todo modelo de negocio tiene conjuntoId + borrado lógico (deletedAt).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────── ENUMS ───────────────────────────────
+
+enum TipoConjunto {
+  EDIFICIO
+  CONJUNTO_CASAS
+  MIXTO
+}
+
+enum EstadoConjunto {
+  ACTIVO
+  SUSPENDIDO
+  EN_APERTURA
+  INACTIVO
+}
+
+enum TipoUnidad {
+  APARTAMENTO
+  CASA
+  LOCAL
+  OFICINA
+  DEPOSITO
+  PARQUEADERO
+}
+
+enum EstadoOcupacion {
+  PROPIETARIO_OCUPA
+  ARRENDADA
+  AIRBNB_O_SIMILAR
+  DESOCUPADA
+  EN_VENTA
+}
+
+enum TipoParqueadero {
+  PRIVADO
+  COMUN
+  VISITANTES
+  MOTO
+  BICICLETA
+  DISCAPACIDAD
+}
+
+enum EstadoEspacio {
+  DISPONIBLE
+  ASIGNADO
+  OCUPADO
+  FUERA_SERVICIO
+}
+
+enum CategoriaZona {
+  SALON
+  PISCINA
+  GIMNASIO
+  BBQ
+  CANCHA
+  JUEGOS
+  TERRAZA
+  SALA_JUNTAS
+  COWORKING
+  OTRA
+}
+
+enum EstadoZona {
+  ACTIVA
+  MANTENIMIENTO
+  INACTIVA
+}
+
+enum EstadoUsuario {
+  ACTIVO
+  INVITADO
+  BLOQUEADO
+  INACTIVO
+}
+
+enum EstadoMembresia {
+  ACTIVA
+  PENDIENTE
+  SUSPENDIDA
+}
+
+enum TipoDocumento {
+  CC
+  CE
+  TI
+  RC
+  PA
+  NIT
+  PEP
+  PPT
+}
+
+enum TipoVinculo {
+  PROPIETARIO
+  COPROPIETARIO
+  ARRENDATARIO
+  RESIDENTE
+  FAMILIAR
+  EMPLEADO_DOMESTICO
+  CUIDADOR
+  VISITANTE_FRECUENTE
+  AUTORIZADO_RECOGER_PAQUETES
+  AUTORIZADO_MENORES
+}
+
+enum EstadoVinculo {
+  PENDIENTE_APROBACION
+  ACTIVO
+  INACTIVO
+  RECHAZADO
+}
+
+enum TipoVehiculo {
+  CARRO
+  MOTO
+  BICICLETA
+  OTRO
+}
+
+enum TipoConcepto {
+  ADMINISTRACION
+  EXTRAORDINARIA
+  MULTA
+  INTERES_MORA
+  ALQUILER_ZONA
+  PARQUEADERO
+  SERVICIO
+  OTRO
+}
+
+enum EstadoCuota {
+  PENDIENTE
+  PARCIAL
+  PAGADA
+  ANULADA
+  EN_ACUERDO
+}
+
+enum OrigenCuota {
+  GENERACION_MENSUAL
+  MANUAL
+  RESERVA
+  MULTA
+  ASAMBLEA
+  APERTURA
+  INTERES
+}
+
+enum DistribucionCuota {
+  POR_COEFICIENTE
+  IGUAL_POR_UNIDAD
+  MANUAL
+}
+
+enum EstadoMulta {
+  PROPUESTA
+  NOTIFICADA
+  EN_DESCARGOS
+  RATIFICADA
+  REVOCADA
+  PAGADA
+}
+
+enum MedioPago {
+  PSE
+  TARJETA
+  NEQUI
+  BANCOLOMBIA_QR
+  EFECTIVO
+  TRANSFERENCIA
+  CONSIGNACION
+  PASARELA
+}
+
+enum Pasarela {
+  WOMPI
+  MERCADOPAGO
+  SIMULADOR
+  NINGUNA
+}
+
+enum EstadoPago {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+  ANULADO
+}
+
+enum EstadoAcuerdo {
+  VIGENTE
+  CUMPLIDO
+  INCUMPLIDO
+  ANULADO
+}
+
+enum TipoMovimiento {
+  DEBITO
+  CREDITO
+}
+
+enum EstadoCertificado {
+  VIGENTE
+  VENCIDO
+  ANULADO
+}
+
+enum EstadoLineaExtracto {
+  PENDIENTE
+  EMPAREJADA
+  CREADA
+  IGNORADA
+}
+
+enum CanalCobro {
+  LLAMADA
+  CORREO
+  VISITA
+  WHATSAPP
+  CARTA
+  SMS
+}
+
+enum EstadoReserva {
+  SOLICITADA
+  APROBADA
+  RECHAZADA
+  CANCELADA
+  CUMPLIDA
+  NO_SHOW
+}
+
+enum EstadoFactura {
+  PENDIENTE
+  EN_PROCESO
+  VALIDADA
+  ERROR
+  ANULADA
+}
+
+enum TipoDocumentoElectronico {
+  FACTURA
+  NOTA_CREDITO
+}
+
+enum TipoVisitante {
+  VISITA
+  DOMICILIO
+  PROVEEDOR
+  TECNICO
+  TRANSPORTE
+  CONTRATISTA
+  OTRO
+}
+
+enum EstadoAutorizacion {
+  ACTIVA
+  USADA
+  VENCIDA
+  REVOCADA
+}
+
+enum EstadoSolicitudIngreso {
+  PENDIENTE
+  AUTORIZADA
+  RECHAZADA
+  EXPIRADA
+  DECISION_TELEFONICA
+}
+
+enum TipoRegistroAcceso {
+  INGRESO
+  SALIDA
+  ANULACION
+}
+
+enum SujetoAcceso {
+  VISITANTE
+  RESIDENTE
+  EMPLEADO
+  VEHICULO
+  PROVEEDOR
+  DOMICILIARIO
+}
+
+enum MedioAcceso {
+  QR
+  CODIGO
+  LLAMADA_RESIDENTE
+  LISTA_FRECUENTES
+  MANUAL
+}
+
+enum EstadoTurno {
+  ABIERTO
+  CERRADO
+}
+
+enum TipoNovedad {
+  RUIDO
+  DANO
+  EMERGENCIA
+  INCIDENTE
+  SEGURIDAD
+  SERVICIOS
+  OTRO
+}
+
+enum Severidad {
+  BAJA
+  MEDIA
+  ALTA
+  CRITICA
+}
+
+enum TipoPaquete {
+  SOBRE
+  CAJA
+  MERCADO
+  DOMICILIO
+  OTRO
+}
+
+enum EstadoPaquete {
+  EN_PORTERIA
+  ENTREGADO
+  DEVUELTO
+}
+
+enum TipoElemento {
+  LLAVE
+  CONTROL
+  TARJETA
+  RADIO
+  OTRO
+}
+
+enum EstadoElemento {
+  DISPONIBLE
+  PRESTADO
+  PERDIDO
+}
+
+enum TipoAlerta {
+  PANICO
+  EMERGENCIA_GENERAL
+  INCENDIO
+  SISMO
+  MEDICA
+  SEGURIDAD
+}
+
+enum EstadoAlerta {
+  ACTIVA
+  ATENDIDA
+  FALSA_ALARMA
+}
+
+enum CategoriaPublicacion {
+  AVISO
+  NOTICIA
+  EVENTO
+  EMERGENCIA
+  CLASIFICADO
+  PERDIDO_ENCONTRADO
+}
+
+enum EstadoPublicacion {
+  BORRADOR
+  PENDIENTE_MODERACION
+  PUBLICADA
+  RECHAZADA
+  ARCHIVADA
+}
+
+enum TipoCampana {
+  GENERAL
+  COBRO_ADMINISTRACION
+}
+
+enum EstadoCampana {
+  BORRADOR
+  PROGRAMADA
+  ENVIANDO
+  ENVIADA
+  CANCELADA
+}
+
+enum EstadoCorreo {
+  PENDIENTE
+  ENVIADO
+  ERROR
+  CANCELADO
+}
+
+enum TipoPregunta {
+  UNICA
+  MULTIPLE
+  ESCALA
+  TEXTO
+}
+
+enum EstadoEncuesta {
+  BORRADOR
+  ABIERTA
+  CERRADA
+}
+
+enum CategoriaDocumento {
+  REGLAMENTO
+  MANUAL_CONVIVENCIA
+  ACTA
+  PRESUPUESTO
+  ESTADO_FINANCIERO
+  POLIZA
+  CONTRATO
+  CIRCULAR
+  OTRO
+}
+
+enum TipoEvento {
+  COMUNITARIO
+  ASAMBLEA
+  MANTENIMIENTO
+  FUMIGACION
+  CORTE_SERVICIO
+  OTRO
+}
+
+enum TipoObjetoPerdido {
+  PERDIDO
+  ENCONTRADO
+}
+
+enum EstadoObjetoPerdido {
+  ABIERTO
+  DEVUELTO
+  CERRADO
+}
+
+enum TipoTicket {
+  PETICION
+  QUEJA
+  RECLAMO
+  SUGERENCIA
+  FELICITACION
+  DANO_ZONA_COMUN
+  DANO_UNIDAD
+  SEGURIDAD
+  RUIDO
+  MASCOTAS
+  OTRO
+}
+
+enum PrioridadTicket {
+  BAJA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+enum EstadoTicket {
+  ABIERTO
+  EN_REVISION
+  ASIGNADO
+  EN_PROCESO
+  EN_ESPERA_RESIDENTE
+  RESUELTO
+  CERRADO
+  REABIERTO
+}
+
+enum OrigenTicket {
+  APP
+  PORTERIA
+  PUBLICO
+  NOVEDAD
+  ACTIVO_QR
+}
+
+enum TipoComentarioTicket {
+  COMENTARIO
+  CAMBIO_ESTADO
+  ASIGNACION
+  SISTEMA
+}
+
+enum GravedadLlamado {
+  LEVE
+  MODERADA
+  GRAVE
+}
+
+enum EstadoLlamado {
+  ENVIADO
+  LEIDO
+  RESPONDIDO
+  CERRADO
+  ESCALADO_MULTA
+}
+
+enum EstadoIncidente {
+  ABIERTO
+  EN_MEDIACION
+  ACUERDO
+  CERRADO
+  ESCALADO
+}
+
+enum EstadoSolicitud {
+  SOLICITADA
+  APROBADA
+  RECHAZADA
+  EN_CURSO
+  FINALIZADA
+  CANCELADA
+}
+
+enum TipoMudanza {
+  INGRESO
+  SALIDA
+}
+
+enum TipoAsamblea {
+  ORDINARIA
+  EXTRAORDINARIA
+}
+
+enum ModalidadAsamblea {
+  PRESENCIAL
+  VIRTUAL
+  MIXTA
+}
+
+enum EstadoAsamblea {
+  BORRADOR
+  CONVOCADA
+  EN_CURSO
+  FINALIZADA
+  CANCELADA
+}
+
+enum TipoAsistencia {
+  PRESENCIAL
+  VIRTUAL
+  PODER
+}
+
+enum EstadoPoder {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+enum TipoMayoria {
+  SIMPLE
+  CALIFICADA_70
+  UNANIME
+}
+
+enum Ponderacion {
+  COEFICIENTE
+  UNIDAD
+}
+
+enum QuienVota {
+  PROPIETARIOS_AL_DIA
+  PROPIETARIOS
+  TODOS
+}
+
+enum EstadoVotacion {
+  BORRADOR
+  ABIERTA
+  CERRADA
+  ANULADA
+}
+
+enum CargoConsejo {
+  PRESIDENTE
+  SECRETARIO
+  VOCAL
+  SUPLENTE
+}
+
+enum EstadoActivo {
+  OPERATIVO
+  EN_MANTENIMIENTO
+  FUERA_SERVICIO
+  DADO_DE_BAJA
+}
+
+enum TipoMantenimiento {
+  PREVENTIVO
+  CORRECTIVO
+  LEGAL
+}
+
+enum OrigenOrden {
+  PLAN
+  TICKET
+  MANUAL
+}
+
+enum EstadoOrden {
+  PENDIENTE
+  PROGRAMADA
+  EN_PROCESO
+  COMPLETADA
+  CANCELADA
+}
+
+enum TipoDocProveedor {
+  RUT
+  CAMARA_COMERCIO
+  POLIZA
+  SEGURIDAD_SOCIAL
+  CERTIFICACION
+  OTRO
+}
+
+enum EstadoContrato {
+  VIGENTE
+  POR_VENCER
+  VENCIDO
+  TERMINADO
+}
+
+enum EstadoPresupuesto {
+  BORRADOR
+  APROBADO
+  CERRADO
+}
+
+enum TipoRubro {
+  INGRESO
+  GASTO
+}
+
+enum EstadoGasto {
+  PENDIENTE_APROBACION
+  APROBADO
+  RECHAZADO
+  PAGADO
+}
+
+enum TipoToken {
+  MAGIC_LINK
+  RESET_PASSWORD
+  OTP
+  PAGO_PUBLICO
+}
+
+enum EstadoInvitacion {
+  PENDIENTE
+  ACEPTADA
+  VENCIDA
+  REVOCADA
+}
+
+enum TipoIntegracion {
+  WOMPI
+  MERCADOPAGO
+  FACTUS
+  ALANUBE
+  SMTP
+  WHATSAPP
+}
+
+enum EstadoImportacion {
+  VALIDANDO
+  CON_ERRORES
+  APLICADA
+  FALLIDA
+}
+
+enum EstadoSuscripcion {
+  ACTIVA
+  PRUEBA
+  VENCIDA
+  CANCELADA
+}
+
+enum RolBrigadista {
+  COORDINADOR
+  PRIMEROS_AUXILIOS
+  EVACUACION
+  CONTRA_INCENDIO
+}
+
+// ─────────────────────────────── SAAS ───────────────────────────────
+
+model PlanSuscripcion {
+  id            String        @id @default(cuid())
+  nombre        String
+  descripcion   String?
+  precioMensual Decimal       @db.Decimal(14, 2)
+  precioUnidad  Decimal       @default(0) @db.Decimal(14, 2)
+  maxUnidades   Int
+  modulos       String[]
+  activo        Boolean       @default(true)
+  conjuntos     Conjunto[]
+  suscripciones Suscripcion[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+}
+
+model Suscripcion {
+  id         String             @id @default(cuid())
+  conjuntoId String
+  conjunto   Conjunto           @relation(fields: [conjuntoId], references: [id])
+  planId     String
+  plan       PlanSuscripcion    @relation(fields: [planId], references: [id])
+  estado     EstadoSuscripcion  @default(ACTIVA)
+  inicio     DateTime
+  fin        DateTime?
+  valor      Decimal            @db.Decimal(14, 2)
+  notas      String?
+  cobros     CobroSuscripcion[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model CobroSuscripcion {
+  id            String      @id @default(cuid())
+  suscripcionId String
+  suscripcion   Suscripcion @relation(fields: [suscripcionId], references: [id])
+  periodo       String
+  valor         Decimal     @db.Decimal(14, 2)
+  pagado        Boolean     @default(false)
+  pagadoEn      DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+}
+
+// ─────────────────────────────── NÚCLEO ───────────────────────────────
+
+model Conjunto {
+  id                    String           @id @default(cuid())
+  nombre                String
+  slug                  String           @unique
+  nit                   String?
+  digitoVerificacion    String?
+  direccion             String?
+  municipioCodigo       String? // DIVIPOLA
+  ciudad                String?
+  departamento          String?
+  telefono              String?
+  email                 String?
+  logoUrl               String?
+  colorPrimario         String?          @default("#0f766e")
+  regimenTributario     String?
+  responsableIva        Boolean          @default(false)
+  tipo                  TipoConjunto     @default(MIXTO)
+  matriculaInmobiliaria String?
+  personeriaJuridica    String?
+  fechaInicioOperacion  DateTime?
+  planId                String?
+  plan                  PlanSuscripcion? @relation(fields: [planId], references: [id])
+  estado                EstadoConjunto   @default(ACTIVO)
+  config                Json             @default("{}")
+  paginaPublica         Boolean          @default(false)
+  descripcionPublica    String?
+  modulosActivos        String[]
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  deletedAt             DateTime?
+
+  suscripciones   Suscripcion[]
+  torres          Torre[]
+  unidades        Unidad[]
+  parqueaderos    Parqueadero[]
+  bodegas         Bodega[]
+  zonas           ZonaComun[]
+  membresias      MembresiaConjunto[]
+  roles           Rol[]
+  personas        Persona[]
+  vinculos        VinculoUnidad[]
+  vehiculos       Vehiculo[]
+  mascotas        Mascota[]
+  conceptos       ConceptoCobro[]
+  cuotas          Cuota[]
+  pagos           Pago[]
+  reservas        Reserva[]
+  tickets         Ticket[]
+  paquetes        Paquete[]
+  registrosAcceso RegistroAcceso[]
+  publicaciones   Publicacion[]
+  activos         Activo[]
+  proveedores     Proveedor[]
+  asambleas       Asamblea[]
+  votaciones      Votacion[]
+  auditorias      Auditoria[]
+}
+
+model Torre {
+  id              String    @id @default(cuid())
+  conjuntoId      String
+  conjunto        Conjunto  @relation(fields: [conjuntoId], references: [id])
+  nombre          String
+  pisos           Int       @default(1)
+  unidadesPorPiso Int?
+  ascensores      Boolean   @default(false)
+  notas           String?
+  unidades        Unidad[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  @@unique([conjuntoId, nombre])
+  @@index([conjuntoId])
+}
+
+model Unidad {
+  id                            String          @id @default(cuid())
+  conjuntoId                    String
+  conjunto                      Conjunto        @relation(fields: [conjuntoId], references: [id])
+  torreId                       String?
+  torre                         Torre?          @relation(fields: [torreId], references: [id])
+  codigo                        String // "T2-501", "Casa 14"
+  tipo                          TipoUnidad      @default(APARTAMENTO)
+  piso                          Int?
+  areaPrivada                   Decimal?        @db.Decimal(10, 2)
+  areaConstruida                Decimal?        @db.Decimal(10, 2)
+  coeficiente                   Decimal         @db.Decimal(9, 6)
+  matriculaInmobiliaria         String?
+  numeroCatastral               String?
+  estrato                       Int?
+  habitaciones                  Int?
+  banos                         Int?
+  balconTerraza                 Boolean         @default(false)
+  estadoOcupacion               EstadoOcupacion @default(PROPIETARIO_OCUPA)
+  plataformaRentaCorta          String?
+  registroRnt                   String?
+  cuotaAdministracion           Decimal         @default(0) @db.Decimal(14, 2)
+  notasEstructura               String?
+  medidores                     Json            @default("{}")
+  tienePersonaMovilidadReducida Boolean         @default(false)
+  requiereAsistenciaEvacuacion  Boolean         @default(false)
+  createdAt                     DateTime        @default(now())
+  updatedAt                     DateTime        @updatedAt
+  deletedAt                     DateTime?
+
+  vinculos        VinculoUnidad[]
+  vehiculos       Vehiculo[]
+  mascotas        Mascota[]
+  parqueaderos    Parqueadero[]
+  bodegas         Bodega[]
+  cuotas          Cuota[]
+  pagos           Pago[]
+  movimientos     MovimientoCartera[]
+  reservas        Reserva[]
+  paquetes        Paquete[]
+  tickets         Ticket[]
+  autorizaciones  AutorizacionIngreso[]
+  registrosAcceso RegistroAcceso[]
+  multas          Multa[]
+  llamados        LlamadoAtencion[]
+  historialCoef   HistorialCoeficiente[]
+  certificados    CertificadoPazYSalvo[]
+  acuerdos        AcuerdoPago[]
+  gestionesCobro  GestionCobro[]
+  asistencias     AsistenciaAsamblea[]
+  votos           Voto[]
+  obras           SolicitudObra[]
+  mudanzas        Mudanza[]
+
+  @@unique([conjuntoId, codigo])
+  @@index([conjuntoId])
+  @@index([torreId])
+}
+
+model HistorialCoeficiente {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  unidadId   String
+  unidad     Unidad    @relation(fields: [unidadId], references: [id])
+  anterior   Decimal   @db.Decimal(9, 6)
+  nuevo      Decimal   @db.Decimal(9, 6)
+  motivo     String?
+  usuarioId  String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Parqueadero {
+  id         String          @id @default(cuid())
+  conjuntoId String
+  conjunto   Conjunto        @relation(fields: [conjuntoId], references: [id])
+  codigo     String
+  tipo       TipoParqueadero @default(PRIVADO)
+  ubicacion  String?
+  unidadId   String?
+  unidad     Unidad?         @relation(fields: [unidadId], references: [id])
+  estado     EstadoEspacio   @default(DISPONIBLE)
+  tarifaHora Decimal?        @db.Decimal(14, 2)
+  tarifaDia  Decimal?        @db.Decimal(14, 2)
+  notas      String?
+  vehiculos  Vehiculo[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  deletedAt  DateTime?
+
+  @@unique([conjuntoId, codigo])
+  @@index([conjuntoId])
+}
+
+model Bodega {
+  id         String        @id @default(cuid())
+  conjuntoId String
+  conjunto   Conjunto      @relation(fields: [conjuntoId], references: [id])
+  codigo     String
+  ubicacion  String?
+  area       Decimal?      @db.Decimal(10, 2)
+  unidadId   String?
+  unidad     Unidad?       @relation(fields: [unidadId], references: [id])
+  estado     EstadoEspacio @default(DISPONIBLE)
+  notas      String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  deletedAt  DateTime?
+
+  @@unique([conjuntoId, codigo])
+  @@index([conjuntoId])
+}
+
+model ZonaComun {
+  id                        String        @id @default(cuid())
+  conjuntoId                String
+  conjunto                  Conjunto      @relation(fields: [conjuntoId], references: [id])
+  nombre                    String
+  tipo                      String?
+  categoria                 CategoriaZona @default(OTRA)
+  descripcion               String?
+  fotos                     String[]
+  capacidad                 Int?
+  horario                   Json          @default("{}") // { "1": {"abre":"08:00","cierra":"22:00"}, ... } 0=domingo
+  reservable                Boolean       @default(true)
+  requiereAprobacion        Boolean       @default(false)
+  tarifa                    Decimal       @default(0) @db.Decimal(14, 2)
+  deposito                  Decimal       @default(0) @db.Decimal(14, 2)
+  duracionMinimaMin         Int           @default(60)
+  duracionMaximaMin         Int           @default(240)
+  anticipacionMinimaHoras   Int           @default(24)
+  anticipacionMaximaDias    Int           @default(60)
+  maxReservasMesUnidad      Int           @default(4)
+  reglasUso                 String?
+  bloqueoPorMora            Boolean       @default(true)
+  gravaIva                  Boolean       @default(false)
+  tarifaIva                 Decimal       @default(19) @db.Decimal(5, 2)
+  generaFactura             Boolean       @default(false)
+  politicaCancelacion       String?
+  horasCancelacionReembolso Int           @default(48)
+  estado                    EstadoZona    @default(ACTIVA)
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
+  deletedAt                 DateTime?
+
+  reservas Reserva[]
+  bloqueos BloqueoZona[]
+  reglas   ReglaReserva[]
+  tickets  Ticket[]
+  activos  Activo[]
+
+  @@index([conjuntoId])
+}
+
+model BloqueoZona {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  zonaId     String
+  zona       ZonaComun @relation(fields: [zonaId], references: [id])
+  inicio     DateTime
+  fin        DateTime
+  motivo     String
+  tipo       String    @default("MANTENIMIENTO") // MANTENIMIENTO | EVENTO | FESTIVO | OTRO
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId, zonaId])
+}
+
+model ReglaReserva {
+  id          String    @id @default(cuid())
+  conjuntoId  String
+  zonaId      String
+  zona        ZonaComun @relation(fields: [zonaId], references: [id])
+  tipo        String // SOLO_FINES_SEMANA | UN_TURNO_POR_DIA | DIAS_PERMITIDOS | MAX_ASISTENTES
+  valor       Json      @default("{}")
+  descripcion String?
+  activa      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId, zonaId])
+}
+
+// ─────────────────────────────── USUARIOS, ROLES ───────────────────────────────
+
+model Usuario {
+  id                 String        @id @default(cuid())
+  email              String        @unique
+  telefono           String?
+  passwordHash       String?
+  nombre             String
+  fotoUrl            String?
+  estado             EstadoUsuario @default(ACTIVO)
+  ultimoAcceso       DateTime?
+  preferenciasNotif  Json          @default("{\"push\":true,\"email\":true,\"whatsapp\":false}")
+  politicaAceptadaEn DateTime?
+  politicaVersion    String?
+  mfaSecret          String?
+  mfaActivo          Boolean       @default(false)
+  esSuperAdmin       Boolean       @default(false)
+  intentosFallidos   Int           @default(0)
+  bloqueadoHasta     DateTime?
+  sessionVersion     Int           @default(0)
+  textoGrande        Boolean       @default(false)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  deletedAt          DateTime?
+
+  membresias         MembresiaConjunto[]
+  personas           Persona[]
+  notificaciones     Notificacion[]
+  suscripcionesPush  SuscripcionPush[]
+  ticketsSolicitados Ticket[]            @relation("TicketSolicitante")
+  ticketsAsignados   Ticket[]            @relation("TicketAsignado")
+  comentariosTicket  ComentarioTicket[]
+  publicaciones      Publicacion[]
+  registrosPorteria  RegistroAcceso[]
+  turnos             TurnoPorteria[]
+}
+
+model MembresiaConjunto {
+  id         String          @id @default(cuid())
+  usuarioId  String
+  usuario    Usuario         @relation(fields: [usuarioId], references: [id])
+  conjuntoId String
+  conjunto   Conjunto        @relation(fields: [conjuntoId], references: [id])
+  rolId      String
+  rol        Rol             @relation(fields: [rolId], references: [id])
+  personaId  String?
+  estado     EstadoMembresia @default(ACTIVA)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  deletedAt  DateTime?
+
+  @@unique([usuarioId, conjuntoId])
+  @@index([conjuntoId])
+}
+
+model Rol {
+  id            String              @id @default(cuid())
+  conjuntoId    String
+  conjunto      Conjunto            @relation(fields: [conjuntoId], references: [id])
+  clave         String // ADMINISTRADOR, PORTERIA... o personalizado
+  nombre        String
+  descripcion   String?
+  base          Boolean             @default(false)
+  basadoEnClave String? // rol base del que se copió (define el alcance)
+  version       Int                 @default(0)
+  permisos      RolPermiso[]
+  membresias    MembresiaConjunto[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([conjuntoId, clave])
+  @@index([conjuntoId])
+}
+
+model Permiso {
+  id          String    @id @default(cuid())
+  clave       String    @unique // modulo.accion
+  modulo      String
+  accion      String
+  descripcion String
+  tipo        String    @default("ACCION") // ACCION | CAMPO | SECCION
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}
+
+model RolPermiso {
+  id           String    @id @default(cuid())
+  conjuntoId   String
+  rolId        String
+  rol          Rol       @relation(fields: [rolId], references: [id], onDelete: Cascade)
+  permisoClave String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  @@unique([rolId, permisoClave])
+  @@index([conjuntoId])
+}
+
+model TokenVerificacion {
+  id         String    @id @default(cuid())
+  tipo       TipoToken
+  tokenHash  String    @unique
+  email      String?
+  usuarioId  String?
+  conjuntoId String?
+  data       Json      @default("{}")
+  expira     DateTime
+  usadoEn    DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([email])
+}
+
+model Invitacion {
+  id            String           @id @default(cuid())
+  conjuntoId    String
+  email         String
+  telefono      String?
+  nombre        String?
+  unidadId      String?
+  personaId     String?
+  rolClave      String
+  tipoVinculo   TipoVinculo?
+  invitadoPorId String?
+  tokenHash     String           @unique
+  estado        EstadoInvitacion @default(PENDIENTE)
+  expira        DateTime
+  aceptadaEn    DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model SuscripcionPush {
+  id        String    @id @default(cuid())
+  usuarioId String
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+  endpoint  String    @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model TokenApi {
+  id          String    @id @default(cuid())
+  conjuntoId  String
+  nombre      String
+  tokenHash   String    @unique
+  prefijo     String
+  permisos    String[]
+  ultimoUso   DateTime?
+  revocado    Boolean   @default(false)
+  creadoPorId String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model WebhookSaliente {
+  id         String           @id @default(cuid())
+  conjuntoId String
+  url        String
+  eventos    String[]
+  secreto    String
+  activo     Boolean          @default(true)
+  entregas   EntregaWebhook[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model EntregaWebhook {
+  id         String          @id @default(cuid())
+  conjuntoId String
+  webhookId  String
+  webhook    WebhookSaliente @relation(fields: [webhookId], references: [id])
+  evento     String
+  payload    Json
+  estado     String          @default("PENDIENTE") // PENDIENTE | ENTREGADO | ERROR
+  intentos   Int             @default(0)
+  respuesta  String?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── PERSONAS ───────────────────────────────
+
+model Persona {
+  id                           String        @id @default(cuid())
+  conjuntoId                   String
+  conjunto                     Conjunto      @relation(fields: [conjuntoId], references: [id])
+  usuarioId                    String?
+  usuario                      Usuario?      @relation(fields: [usuarioId], references: [id])
+  tipoDocumento                TipoDocumento @default(CC)
+  numeroDocumento              String
+  nombres                      String
+  apellidos                    String
+  fechaNacimiento              DateTime?
+  genero                       String?
+  fotoUrl                      String?
+  telefono                     String?
+  email                        String?
+  eps                          String?
+  contactoEmergenciaNombre     String?
+  contactoEmergenciaTelefono   String?
+  ocupacion                    String?
+  movilidadReducida            Boolean       @default(false)
+  movilidadDescripcion         String?
+  requiereAsistenciaEvacuacion Boolean       @default(false)
+  tipoSangre                   String?
+  observaciones                String?
+  directorioOptIn              Boolean       @default(false)
+  directorioCampos             String[] // nombre, unidad, telefono, whatsapp, servicios
+  serviciosOfrecidos           String?
+  consentimientoDatosEn        DateTime?
+  consentimientoVersion        String?
+  anonimizada                  Boolean       @default(false)
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  deletedAt                    DateTime?
+
+  vinculos VinculoUnidad[]
+  multas   Multa[]
+  llamados LlamadoAtencion[]
+
+  @@unique([conjuntoId, tipoDocumento, numeroDocumento])
+  @@index([conjuntoId])
+}
+
+model VinculoUnidad {
+  id                  String        @id @default(cuid())
+  conjuntoId          String
+  conjunto            Conjunto      @relation(fields: [conjuntoId], references: [id])
+  personaId           String
+  persona             Persona       @relation(fields: [personaId], references: [id])
+  unidadId            String
+  unidad              Unidad        @relation(fields: [unidadId], references: [id])
+  tipo                TipoVinculo
+  porcentajePropiedad Decimal?      @db.Decimal(5, 2)
+  fechaInicio         DateTime      @default(now())
+  fechaFin            DateTime?
+  principal           Boolean       @default(false)
+  horarioPermitido    Json? // { dias:[1,2,3], desde:"07:00", hasta:"17:00" }
+  estado              EstadoVinculo @default(ACTIVO)
+  puedeVerCuenta      Boolean       @default(false)
+  aprobadoPorId       String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  deletedAt           DateTime?
+
+  @@index([conjuntoId])
+  @@index([unidadId])
+  @@index([personaId])
+}
+
+model Vehiculo {
+  id                  String       @id @default(cuid())
+  conjuntoId          String
+  conjunto            Conjunto     @relation(fields: [conjuntoId], references: [id])
+  unidadId            String
+  unidad              Unidad       @relation(fields: [unidadId], references: [id])
+  placa               String
+  tipo                TipoVehiculo @default(CARRO)
+  marca               String?
+  modelo              String?
+  color               String?
+  fotoUrl             String?
+  tarjetaPropiedadUrl String?
+  soatVence           DateTime?
+  tecnomecanicaVence  DateTime?
+  parqueaderoId       String?
+  parqueadero         Parqueadero? @relation(fields: [parqueaderoId], references: [id])
+  activo              Boolean      @default(true)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  deletedAt           DateTime?
+
+  @@unique([conjuntoId, placa])
+  @@index([conjuntoId])
+}
+
+model Mascota {
+  id                      String    @id @default(cuid())
+  conjuntoId              String
+  conjunto                Conjunto  @relation(fields: [conjuntoId], references: [id])
+  unidadId                String
+  unidad                  Unidad    @relation(fields: [unidadId], references: [id])
+  nombre                  String
+  especie                 String
+  raza                    String?
+  color                   String?
+  fotoUrl                 String?
+  carneVacunasUrl         String?
+  antirrabicaVence        DateTime?
+  potencialmentePeligrosa Boolean   @default(false)
+  polizaUrl               String?
+  microchip               String?
+  activo                  Boolean   @default(true)
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  deletedAt               DateTime?
+
+  @@index([conjuntoId])
+}
+
+model BorradorFormulario {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  usuarioId  String
+  clave      String
+  datos      Json
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@unique([usuarioId, conjuntoId, clave])
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── CARTERA ───────────────────────────────
+
+model ConceptoCobro {
+  id                 String       @id @default(cuid())
+  conjuntoId         String
+  conjunto           Conjunto     @relation(fields: [conjuntoId], references: [id])
+  nombre             String
+  tipo               TipoConcepto
+  cuentaContable     String?
+  gravaIva           Boolean      @default(false)
+  tarifaIva          Decimal      @default(0) @db.Decimal(5, 2)
+  facturaElectronica Boolean      @default(false)
+  activo             Boolean      @default(true)
+  cuotas             Cuota[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  deletedAt          DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Cuota {
+  id                    String           @id @default(cuid())
+  conjuntoId            String
+  conjunto              Conjunto         @relation(fields: [conjuntoId], references: [id])
+  unidadId              String
+  unidad                Unidad           @relation(fields: [unidadId], references: [id])
+  conceptoId            String
+  concepto              ConceptoCobro    @relation(fields: [conceptoId], references: [id])
+  periodo               String // YYYY-MM
+  descripcion           String?
+  fechaEmision          DateTime
+  fechaVencimiento      DateTime
+  fechaProntoPago       DateTime?
+  porcentajeProntoPago  Decimal          @default(0) @db.Decimal(5, 2)
+  valorBase             Decimal          @db.Decimal(14, 2)
+  iva                   Decimal          @default(0) @db.Decimal(14, 2)
+  descuento             Decimal          @default(0) @db.Decimal(14, 2)
+  interes               Decimal          @default(0) @db.Decimal(14, 2) // intereses causados sobre esta cuota (informativo)
+  saldo                 Decimal          @db.Decimal(14, 2)
+  estado                EstadoCuota      @default(PENDIENTE)
+  referenciaPago        String           @unique
+  origen                OrigenCuota      @default(MANUAL)
+  cuotaExtraordinariaId String?
+  cuotaOrigenId         String? // para cuotas de interés: cuota que lo generó
+  acuerdoId             String?
+  interesCausadoHasta   DateTime?
+  aplicaciones          AplicacionPago[]
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  deletedAt             DateTime?
+
+  @@index([conjuntoId])
+  @@index([unidadId, estado])
+  @@index([conjuntoId, periodo])
+}
+
+model CuotaExtraordinaria {
+  id                 String            @id @default(cuid())
+  conjuntoId         String
+  nombre             String
+  motivo             String?
+  asambleaId         String?
+  valorTotal         Decimal           @db.Decimal(14, 2)
+  distribucion       DistribucionCuota @default(POR_COEFICIENTE)
+  numeroCuotas       Int               @default(1)
+  fechaPrimeraCuota  DateTime
+  diaVencimiento     Int               @default(10)
+  distribucionManual Json?
+  generada           Boolean           @default(false)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  deletedAt          DateTime?
+
+  @@index([conjuntoId])
+}
+
+model CatalogoInfraccion {
+  id            String          @id @default(cuid())
+  conjuntoId    String
+  codigo        String
+  nombre        String
+  descripcion   String?
+  valorSugerido Decimal         @default(0) @db.Decimal(14, 2)
+  gravedad      GravedadLlamado @default(LEVE)
+  articulo      String?
+  activo        Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([conjuntoId, codigo])
+  @@index([conjuntoId])
+}
+
+model Multa {
+  id             String      @id @default(cuid())
+  conjuntoId     String
+  unidadId       String
+  unidad         Unidad      @relation(fields: [unidadId], references: [id])
+  personaId      String?
+  persona        Persona?    @relation(fields: [personaId], references: [id])
+  infraccionId   String?
+  llamadoId      String?
+  descripcion    String
+  evidencias     String[]
+  valor          Decimal     @db.Decimal(14, 2)
+  fecha          DateTime    @default(now())
+  estado         EstadoMulta @default(PROPUESTA)
+  notificadaEn   DateTime?
+  plazoDescargos DateTime?
+  descargos      String?
+  descargosEn    DateTime?
+  resolucion     String?
+  resolucionEn   DateTime?
+  decididaPorId  String?
+  cuotaId        String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Pago {
+  id                  String           @id @default(cuid())
+  conjuntoId          String
+  conjunto            Conjunto         @relation(fields: [conjuntoId], references: [id])
+  unidadId            String
+  unidad              Unidad           @relation(fields: [unidadId], references: [id])
+  valor               Decimal          @db.Decimal(14, 2)
+  fecha               DateTime         @default(now())
+  medio               MedioPago
+  pasarela            Pasarela         @default(NINGUNA)
+  referencia          String           @unique
+  referenciaExterna   String?
+  estado              EstadoPago       @default(PENDIENTE)
+  comprobanteUrl      String?
+  registradoPorId     String?
+  conciliado          Boolean          @default(false)
+  numeroRecibo        Int?
+  datosPasarela       Json?
+  cuotasSeleccionadas String[]
+  observaciones       String?
+  reservaId           String?
+  pagadorNombre       String?
+  pagadorEmail        String?
+  pagadorDocumento    String?
+  aplicaciones        AplicacionPago[]
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  deletedAt           DateTime?
+
+  @@index([conjuntoId])
+  @@index([unidadId])
+}
+
+model AplicacionPago {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  pagoId     String
+  pago       Pago      @relation(fields: [pagoId], references: [id])
+  cuotaId    String
+  cuota      Cuota     @relation(fields: [cuotaId], references: [id])
+  valor      Decimal   @db.Decimal(14, 2)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model AcuerdoPago {
+  id            String        @id @default(cuid())
+  conjuntoId    String
+  unidadId      String
+  unidad        Unidad        @relation(fields: [unidadId], references: [id])
+  saldoInicial  Decimal       @db.Decimal(14, 2)
+  numeroCuotas  Int
+  valorCuota    Decimal       @db.Decimal(14, 2)
+  fechaInicio   DateTime
+  diaPago       Int           @default(10)
+  estado        EstadoAcuerdo @default(VIGENTE)
+  documentoUrl  String?
+  observaciones String?
+  creadoPorId   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model MovimientoCartera {
+  id           String         @id @default(cuid())
+  conjuntoId   String
+  unidadId     String
+  unidad       Unidad         @relation(fields: [unidadId], references: [id])
+  fecha        DateTime       @default(now())
+  tipo         TipoMovimiento
+  valor        Decimal        @db.Decimal(14, 2)
+  conceptoTipo TipoConcepto?
+  cuotaId      String?
+  pagoId       String?
+  descripcion  String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+
+  @@index([conjuntoId])
+  @@index([unidadId, fecha])
+}
+
+model CertificadoPazYSalvo {
+  id              String            @id @default(cuid())
+  conjuntoId      String
+  unidadId        String
+  unidad          Unidad            @relation(fields: [unidadId], references: [id])
+  personaNombre   String?
+  solicitadoPorId String?
+  fecha           DateTime          @default(now())
+  vigenteHasta    DateTime
+  codigo          String            @unique
+  estado          EstadoCertificado @default(VIGENTE)
+  emitidoPorId    String?
+  automatico      Boolean           @default(true)
+  observaciones   String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+
+  @@index([conjuntoId])
+}
+
+model CuentaBancaria {
+  id             String                 @id @default(cuid())
+  conjuntoId     String
+  banco          String
+  tipo           String                 @default("AHORROS")
+  numero         String
+  titular        String
+  convenio       String?
+  activa         Boolean                @default(true)
+  conciliaciones ConciliacionBancaria[]
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId])
+}
+
+model ConciliacionBancaria {
+  id            String          @id @default(cuid())
+  conjuntoId    String
+  cuentaId      String?
+  cuenta        CuentaBancaria? @relation(fields: [cuentaId], references: [id])
+  archivoNombre String
+  periodo       String?
+  estado        String          @default("EN_PROCESO") // EN_PROCESO | CERRADA
+  totalLineas   Int             @default(0)
+  emparejadas   Int             @default(0)
+  lineas        LineaExtracto[]
+  creadoPorId   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model LineaExtracto {
+  id               String               @id @default(cuid())
+  conjuntoId       String
+  conciliacionId   String
+  conciliacion     ConciliacionBancaria @relation(fields: [conciliacionId], references: [id])
+  fecha            DateTime
+  descripcion      String?
+  referencia       String?
+  valor            Decimal              @db.Decimal(14, 2)
+  estado           EstadoLineaExtracto  @default(PENDIENTE)
+  pagoId           String?
+  unidadSugeridaId String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  deletedAt        DateTime?
+
+  @@index([conjuntoId])
+}
+
+model GestionCobro {
+  id         String     @id @default(cuid())
+  conjuntoId String
+  unidadId   String
+  unidad     Unidad     @relation(fields: [unidadId], references: [id])
+  canal      CanalCobro
+  fecha      DateTime   @default(now())
+  resultado  String?
+  notas      String?
+  usuarioId  String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+  @@index([unidadId, canal, fecha])
+}
+
+model Consecutivo {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  tipo       String // RECIBO | RADICADO | ORDEN
+  anio       Int       @default(0)
+  valor      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@unique([conjuntoId, tipo, anio])
+}
+
+model TasaMora {
+  id                String    @id @default(cuid())
+  conjuntoId        String
+  vigenteDesde      DateTime
+  tasaEfectivaAnual Decimal   @db.Decimal(7, 4) // % E.A. de mora
+  tasaMensual       Decimal   @db.Decimal(7, 4) // % mensual equivalente
+  fuente            String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  @@index([conjuntoId, vigenteDesde])
+}
+
+// ─────────────────────────────── RESERVAS Y FACTURACIÓN ───────────────────────────────
+
+model Reserva {
+  id                     String        @id @default(cuid())
+  conjuntoId             String
+  conjunto               Conjunto      @relation(fields: [conjuntoId], references: [id])
+  zonaId                 String
+  zona                   ZonaComun     @relation(fields: [zonaId], references: [id])
+  unidadId               String
+  unidad                 Unidad        @relation(fields: [unidadId], references: [id])
+  personaId              String?
+  usuarioId              String?
+  inicio                 DateTime
+  fin                    DateTime
+  asistentes             Int           @default(1)
+  motivo                 String?
+  estado                 EstadoReserva @default(SOLICITADA)
+  valor                  Decimal       @default(0) @db.Decimal(14, 2)
+  iva                    Decimal       @default(0) @db.Decimal(14, 2)
+  deposito               Decimal       @default(0) @db.Decimal(14, 2)
+  cuotaId                String?
+  pagoId                 String?
+  pagada                 Boolean       @default(false)
+  checkInEn              DateTime?
+  checkInPorId           String?
+  checkOutEn             DateTime?
+  checkOutPorId          String?
+  actaEntrega            Json?
+  actaRecepcion          Json?
+  actaFotos              String[]
+  calificacion           Int?
+  comentarioCalificacion String?
+  canceladaEn            DateTime?
+  motivoCancelacion      String?
+  aprobadaPorId          String?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  deletedAt              DateTime?
+
+  @@index([conjuntoId])
+  @@index([zonaId, inicio])
+}
+
+model FacturaElectronica {
+  id               String                   @id @default(cuid())
+  conjuntoId       String
+  tipo             TipoDocumentoElectronico @default(FACTURA)
+  proveedor        String                   @default("FACTUS") // FACTUS | ALANUBE | SIMULADO
+  reservaId        String?
+  pagoId           String?
+  facturaOrigenId  String?
+  referenceCode    String                   @unique
+  numero           String?
+  cufe             String?
+  estado           EstadoFactura            @default(PENDIENTE)
+  validadaEn       DateTime?
+  urlPublica       String?
+  qr               String?
+  pdfUrl           String?
+  xmlUrl           String?
+  errores          Json?
+  intentos         Int                      @default(0)
+  payload          Json?
+  respuesta        Json?
+  subtotal         Decimal                  @db.Decimal(14, 2)
+  iva              Decimal                  @db.Decimal(14, 2)
+  total            Decimal                  @db.Decimal(14, 2)
+  clienteNombre    String
+  clienteDocumento String
+  clienteEmail     String?
+  descripcion      String
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  deletedAt        DateTime?
+
+  @@index([conjuntoId])
+}
+
+model TablaReferencia {
+  id        String    @id @default(cuid())
+  fuente    String // FACTUS | DIVIPOLA
+  tipo      String // municipio | metodo_pago | unidad_medida ...
+  codigo    String
+  nombre    String
+  extra     Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@unique([fuente, tipo, codigo])
+}
+
+// ─────────────────────────────── PORTERÍA ───────────────────────────────
+
+model Visitante {
+  id               String           @id @default(cuid())
+  conjuntoId       String
+  tipoDocumento    TipoDocumento    @default(CC)
+  numeroDocumento  String?
+  nombre           String
+  fotoUrl          String?
+  telefono         String?
+  empresa          String?
+  tipo             TipoVisitante    @default(VISITA)
+  listaNegra       Boolean          @default(false)
+  motivoListaNegra String?
+  registros        RegistroAcceso[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
+
+  @@index([conjuntoId])
+  @@index([conjuntoId, numeroDocumento])
+}
+
+model AutorizacionIngreso {
+  id                        String             @id @default(cuid())
+  conjuntoId                String
+  unidadId                  String
+  unidad                    Unidad             @relation(fields: [unidadId], references: [id])
+  creadaPorId               String?
+  visitanteId               String?
+  nombreVisitante           String
+  documentoVisitante        String?
+  tipo                      TipoVisitante      @default(VISITA)
+  fechaInicio               DateTime
+  fechaFin                  DateTime
+  recurrente                Boolean            @default(false)
+  diasSemana                Int[]
+  horaInicio                String?
+  horaFin                   String?
+  placa                     String?
+  codigo                    String // 6 dígitos
+  qrToken                   String             @unique
+  estado                    EstadoAutorizacion @default(ACTIVA)
+  usosPermitidos            Int                @default(1)
+  usos                      Int                @default(0)
+  observaciones             String?
+  soporteSeguridadSocialUrl String?
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+  deletedAt                 DateTime?
+
+  @@index([conjuntoId])
+  @@index([conjuntoId, codigo])
+}
+
+model SolicitudIngreso {
+  id                 String                 @id @default(cuid())
+  conjuntoId         String
+  unidadId           String
+  visitanteNombre    String
+  visitanteDocumento String?
+  tipo               TipoVisitante          @default(VISITA)
+  fotoUrl            String?
+  placa              String?
+  estado             EstadoSolicitudIngreso @default(PENDIENTE)
+  respondidaPorId    String?
+  respondidaEn       DateTime?
+  porteroId          String?
+  registroAccesoId   String?
+  expiraEn           DateTime
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  deletedAt          DateTime?
+
+  @@index([conjuntoId])
+}
+
+model RegistroAcceso {
+  id             String             @id @default(cuid())
+  conjuntoId     String
+  conjunto       Conjunto           @relation(fields: [conjuntoId], references: [id])
+  tipo           TipoRegistroAcceso
+  sujeto         SujetoAcceso       @default(VISITANTE)
+  visitanteId    String?
+  visitante      Visitante?         @relation(fields: [visitanteId], references: [id])
+  personaId      String?
+  nombre         String
+  documento      String?
+  unidadId       String?
+  unidad         Unidad?            @relation(fields: [unidadId], references: [id])
+  autorizacionId String?
+  medio          MedioAcceso        @default(MANUAL)
+  placa          String?
+  parqueaderoId  String?
+  hora           DateTime           @default(now())
+  porteroId      String?
+  portero        Usuario?           @relation(fields: [porteroId], references: [id])
+  fotoUrl        String?
+  observaciones  String?
+  ingresoId      String? // salida → ingreso
+  anulaId        String? // anulación → registro original
+  clienteId      String?            @unique // idempotencia offline
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId, hora])
+  @@index([ingresoId])
+}
+
+model TurnoPorteria {
+  id                String      @id @default(cuid())
+  conjuntoId        String
+  porteroId         String
+  portero           Usuario     @relation(fields: [porteroId], references: [id])
+  apertura          DateTime    @default(now())
+  cierre            DateTime?
+  novedadesApertura String?
+  novedadesCierre   String?
+  checklistApertura Json        @default("[]")
+  checklistCierre   Json?
+  firmaApertura     String?
+  firmaCierre       String?
+  estado            EstadoTurno @default(ABIERTO)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  deletedAt         DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Novedad {
+  id             String      @id @default(cuid())
+  conjuntoId     String
+  turnoId        String?
+  tipo           TipoNovedad
+  severidad      Severidad   @default(BAJA)
+  descripcion    String
+  fotos          String[]
+  unidadId       String?
+  reportadoPorId String?
+  notificada     Boolean     @default(false)
+  ticketId       String?
+  clienteId      String?     @unique
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId, createdAt])
+}
+
+model Paquete {
+  id                   String        @id @default(cuid())
+  conjuntoId           String
+  conjunto             Conjunto      @relation(fields: [conjuntoId], references: [id])
+  unidadId             String
+  unidad               Unidad        @relation(fields: [unidadId], references: [id])
+  destinatario         String?
+  transportadora       String?
+  guia                 String?
+  tipo                 TipoPaquete   @default(CAJA)
+  fotoUrl              String?
+  fotoGuiaUrl          String?
+  llegadaEn            DateTime      @default(now())
+  recibidoPorId        String?
+  estado               EstadoPaquete @default(EN_PORTERIA)
+  entregadoEn          DateTime?
+  entregadoPorId       String?
+  recogidoPor          String?
+  recogidoPorPersonaId String?
+  firmaEntrega         String?
+  fotoEntregaUrl       String?
+  notificadoEn         DateTime?
+  observaciones        String?
+  clienteId            String?       @unique
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  deletedAt            DateTime?
+
+  @@index([conjuntoId, estado])
+}
+
+model LlaveElemento {
+  id         String             @id @default(cuid())
+  conjuntoId String
+  nombre     String
+  tipo       TipoElemento       @default(LLAVE)
+  codigo     String?
+  ubicacion  String?
+  estado     EstadoElemento     @default(DISPONIBLE)
+  notas      String?
+  prestamos  PrestamoElemento[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model PrestamoElemento {
+  id            String        @id @default(cuid())
+  conjuntoId    String
+  elementoId    String
+  elemento      LlaveElemento @relation(fields: [elementoId], references: [id])
+  prestadoA     String
+  unidadId      String?
+  prestadoEn    DateTime      @default(now())
+  devueltoEn    DateTime?
+  porteroId     String?
+  observaciones String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model AlertaEmergencia {
+  id            String       @id @default(cuid())
+  conjuntoId    String
+  tipo          TipoAlerta
+  origen        String // PORTERIA | RESIDENTE | ADMIN
+  unidadId      String?
+  usuarioId     String?
+  mensaje       String?
+  alcance       String       @default("ADMIN_CONSEJO") // ADMIN_CONSEJO | TODOS
+  estado        EstadoAlerta @default(ACTIVA)
+  atendidaEn    DateTime?
+  atendidaPorId String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── COMUNICACIONES ───────────────────────────────
+
+model Segmento {
+  id          String    @id @default(cuid())
+  conjuntoId  String
+  nombre      String
+  descripcion String?
+  definicion  Json // ver lib/segmentos
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Publicacion {
+  id                 String                  @id @default(cuid())
+  conjuntoId         String
+  conjunto           Conjunto                @relation(fields: [conjuntoId], references: [id])
+  autorId            String
+  autor              Usuario                 @relation(fields: [autorId], references: [id])
+  titulo             String
+  contenido          Json                    @default("[]") // bloques
+  resumen            String?
+  categoria          CategoriaPublicacion    @default(AVISO)
+  segmentoId         String?
+  audiencia          Json?
+  fijada             Boolean                 @default(false)
+  permiteComentarios Boolean                 @default(true)
+  venceEn            DateTime?
+  estado             EstadoPublicacion       @default(PUBLICADA)
+  encuestaId         String?
+  precio             Decimal?                @db.Decimal(14, 2)
+  imagenes           String[]
+  comentarios        ComentarioPublicacion[]
+  reacciones         ReaccionPublicacion[]
+  lecturas           LecturaPublicacion[]
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  deletedAt          DateTime?
+
+  @@index([conjuntoId, createdAt])
+}
+
+model ComentarioPublicacion {
+  id            String      @id @default(cuid())
+  conjuntoId    String
+  publicacionId String
+  publicacion   Publicacion @relation(fields: [publicacionId], references: [id])
+  autorId       String
+  autorNombre   String
+  contenido     String
+  oculto        Boolean     @default(false)
+  moderadoPorId String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model ReaccionPublicacion {
+  id            String      @id @default(cuid())
+  conjuntoId    String
+  publicacionId String
+  publicacion   Publicacion @relation(fields: [publicacionId], references: [id])
+  usuarioId     String
+  tipo          String      @default("LIKE")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([publicacionId, usuarioId])
+  @@index([conjuntoId])
+}
+
+model LecturaPublicacion {
+  id            String      @id @default(cuid())
+  conjuntoId    String
+  publicacionId String
+  publicacion   Publicacion @relation(fields: [publicacionId], references: [id])
+  usuarioId     String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([publicacionId, usuarioId])
+  @@index([conjuntoId])
+}
+
+model CampanaCorreo {
+  id                 String           @id @default(cuid())
+  conjuntoId         String
+  asunto             String
+  plantilla          String // HTML/markdown con {{variables}}
+  tipo               TipoCampana      @default(GENERAL)
+  segmentoId         String?
+  definicionSegmento Json?
+  adjuntos           String[]
+  programadaPara     DateTime?
+  estado             EstadoCampana    @default(BORRADOR)
+  totalDestinatarios Int              @default(0)
+  enviados           Int              @default(0)
+  rebotes            Int              @default(0)
+  aperturas          Int              @default(0)
+  clics              Int              @default(0)
+  creadaPorId        String?
+  correos            CorreoSaliente[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  deletedAt          DateTime?
+
+  @@index([conjuntoId])
+}
+
+model CorreoSaliente {
+  id         String         @id @default(cuid())
+  conjuntoId String?
+  campanaId  String?
+  campana    CampanaCorreo? @relation(fields: [campanaId], references: [id])
+  para       String
+  asunto     String
+  html       String
+  texto      String?
+  adjuntos   Json?
+  estado     EstadoCorreo   @default(PENDIENTE)
+  intentos   Int            @default(0)
+  error      String?
+  enviadoEn  DateTime?
+  abiertoEn  DateTime?
+  clicEn     DateTime?
+  trackingId String         @unique @default(cuid())
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  deletedAt  DateTime?
+
+  @@index([estado, createdAt])
+}
+
+model Notificacion {
+  id         String    @id @default(cuid())
+  conjuntoId String?
+  usuarioId  String
+  usuario    Usuario   @relation(fields: [usuarioId], references: [id])
+  titulo     String
+  cuerpo     String
+  tipo       String    @default("GENERAL")
+  enlace     String?
+  canales    String[]
+  leida      Boolean   @default(false)
+  leidaEn    DateTime?
+  data       Json?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([usuarioId, leida])
+}
+
+model Encuesta {
+  id          String              @id @default(cuid())
+  conjuntoId  String
+  titulo      String
+  descripcion String?
+  segmentoId  String?
+  anonima     Boolean             @default(false)
+  inicio      DateTime            @default(now())
+  fin         DateTime
+  estado      EstadoEncuesta      @default(ABIERTA)
+  creadaPorId String?
+  preguntas   PreguntaEncuesta[]
+  respuestas  RespuestaEncuesta[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model PreguntaEncuesta {
+  id         String       @id @default(cuid())
+  conjuntoId String
+  encuestaId String
+  encuesta   Encuesta     @relation(fields: [encuestaId], references: [id], onDelete: Cascade)
+  orden      Int
+  tipo       TipoPregunta
+  texto      String
+  opciones   String[]
+  requerida  Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
+}
+
+model RespuestaEncuesta {
+  id          String    @id @default(cuid())
+  conjuntoId  String
+  encuestaId  String
+  encuesta    Encuesta  @relation(fields: [encuestaId], references: [id])
+  usuarioId   String?
+  unidadId    String?
+  respuestas  Json // { preguntaId: valor }
+  votanteHash String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@unique([encuestaId, votanteHash])
+  @@index([conjuntoId])
+}
+
+model CarpetaDocumento {
+  id            String      @id @default(cuid())
+  conjuntoId    String
+  nombre        String
+  padreId       String?
+  rolesVisibles String[]
+  documentos    Documento[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Documento {
+  id                 String             @id @default(cuid())
+  conjuntoId         String
+  carpetaId          String?
+  carpeta            CarpetaDocumento?  @relation(fields: [carpetaId], references: [id])
+  titulo             String
+  descripcion        String?
+  categoria          CategoriaDocumento @default(OTRO)
+  rolesVisibles      String[] // vacío = todos
+  requiereAcuse      Boolean            @default(false)
+  versionActual      Int                @default(1)
+  vence              DateTime?
+  publicado          Boolean            @default(true)
+  codigoVerificacion String?            @unique
+  versiones          VersionDocumento[]
+  acuses             AcuseDocumento[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  deletedAt          DateTime?
+
+  @@index([conjuntoId])
+}
+
+model VersionDocumento {
+  id            String    @id @default(cuid())
+  conjuntoId    String
+  documentoId   String
+  documento     Documento @relation(fields: [documentoId], references: [id])
+  version       Int
+  archivoUrl    String
+  nombreArchivo String
+  mime          String
+  tamano        Int
+  subidoPorId   String?
+  notas         String?
+  textoExtraido String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model AcuseDocumento {
+  id          String    @id @default(cuid())
+  conjuntoId  String
+  documentoId String
+  documento   Documento @relation(fields: [documentoId], references: [id])
+  usuarioId   String
+  version     Int
+  leidoEn     DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@unique([documentoId, usuarioId, version])
+  @@index([conjuntoId])
+}
+
+model EventoCalendario {
+  id                String     @id @default(cuid())
+  conjuntoId        String
+  titulo            String
+  descripcion       String?
+  tipo              TipoEvento @default(COMUNITARIO)
+  inicio            DateTime
+  fin               DateTime
+  todoElDia         Boolean    @default(false)
+  lugar             String?
+  zonaId            String?
+  creadoPorId       String?
+  visibleResidentes Boolean    @default(true)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  deletedAt         DateTime?
+
+  @@index([conjuntoId, inicio])
+}
+
+model ObjetoPerdido {
+  id             String              @id @default(cuid())
+  conjuntoId     String
+  tipo           TipoObjetoPerdido
+  descripcion    String
+  lugar          String?
+  fecha          DateTime            @default(now())
+  fotoUrl        String?
+  reportadoPorId String?
+  contacto       String?
+  estado         EstadoObjetoPerdido @default(ABIERTO)
+  entregadoA     String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── PQRS Y CONVIVENCIA ───────────────────────────────
+
+model Ticket {
+  id                     String             @id @default(cuid())
+  conjuntoId             String
+  conjunto               Conjunto           @relation(fields: [conjuntoId], references: [id])
+  radicado               String
+  tipo                   TipoTicket
+  unidadId               String?
+  unidad                 Unidad?            @relation(fields: [unidadId], references: [id])
+  solicitanteId          String?
+  solicitante            Usuario?           @relation("TicketSolicitante", fields: [solicitanteId], references: [id])
+  solicitanteNombre      String?
+  solicitanteEmail       String?
+  solicitanteTelefono    String?
+  zonaId                 String?
+  zona                   ZonaComun?         @relation(fields: [zonaId], references: [id])
+  activoId               String?
+  activo                 Activo?            @relation(fields: [activoId], references: [id])
+  titulo                 String
+  descripcion            String
+  adjuntos               String[]
+  ubicacion              String?
+  prioridad              PrioridadTicket    @default(MEDIA)
+  estado                 EstadoTicket       @default(ABIERTO)
+  asignadoAId            String?
+  asignadoA              Usuario?           @relation("TicketAsignado", fields: [asignadoAId], references: [id])
+  proveedorId            String?
+  fechaLimite            DateTime
+  primeraRespuestaEn     DateTime?
+  resueltoEn             DateTime?
+  cerradoEn              DateTime?
+  calificacion           Int?
+  comentarioCalificacion String?
+  reabiertoVeces         Int                @default(0)
+  origen                 OrigenTicket       @default(APP)
+  comentarios            ComentarioTicket[]
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  deletedAt              DateTime?
+
+  @@unique([conjuntoId, radicado])
+  @@index([conjuntoId, estado])
+}
+
+model ComentarioTicket {
+  id         String               @id @default(cuid())
+  conjuntoId String
+  ticketId   String
+  ticket     Ticket               @relation(fields: [ticketId], references: [id])
+  autorId    String?
+  autor      Usuario?             @relation(fields: [autorId], references: [id])
+  contenido  String
+  interno    Boolean              @default(false)
+  adjuntos   String[]
+  tipo       TipoComentarioTicket @default(COMENTARIO)
+  data       Json?
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model PlantillaRespuesta {
+  id         String      @id @default(cuid())
+  conjuntoId String
+  titulo     String
+  contenido  String
+  tipoTicket TipoTicket?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model LlamadoAtencion {
+  id           String          @id @default(cuid())
+  conjuntoId   String
+  unidadId     String
+  unidad       Unidad          @relation(fields: [unidadId], references: [id])
+  personaId    String?
+  persona      Persona?        @relation(fields: [personaId], references: [id])
+  infraccionId String?
+  motivo       String
+  descripcion  String
+  evidencias   String[]
+  gravedad     GravedadLlamado @default(LEVE)
+  enviadoPorId String?
+  fecha        DateTime        @default(now())
+  acuseEn      DateTime?
+  respuesta    String?
+  respuestaEn  DateTime?
+  estado       EstadoLlamado   @default(ENVIADO)
+  multaId      String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  deletedAt    DateTime?
+
+  @@index([conjuntoId])
+}
+
+model IncidenteConvivencia {
+  id          String          @id @default(cuid())
+  conjuntoId  String
+  titulo      String
+  descripcion String
+  unidadesIds String[]
+  fecha       DateTime        @default(now())
+  estado      EstadoIncidente @default(ABIERTO)
+  mediadorId  String?
+  sesiones    Json            @default("[]")
+  acuerdos    String?
+  creadoPorId String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model SolicitudObra {
+  id            String          @id @default(cuid())
+  conjuntoId    String
+  unidadId      String
+  unidad        Unidad          @relation(fields: [unidadId], references: [id])
+  solicitanteId String?
+  descripcion   String
+  tipo          String          @default("REMODELACION")
+  fechaInicio   DateTime
+  fechaFin      DateTime
+  horario       String?         @default("L-V 8:00-17:00, S 8:00-13:00")
+  contratistas  Json            @default("[]") // [{nombre, documento, seguridadSocialUrl, vence}]
+  deposito      Decimal         @default(0) @db.Decimal(14, 2)
+  estado        EstadoSolicitud @default(SOLICITADA)
+  aprobadaPorId String?
+  observaciones String?
+  cierreNotas   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Mudanza {
+  id                  String          @id @default(cuid())
+  conjuntoId          String
+  unidadId            String
+  unidad              Unidad          @relation(fields: [unidadId], references: [id])
+  solicitanteId       String?
+  tipo                TipoMudanza
+  fecha               DateTime
+  horaInicio          String
+  horaFin             String
+  recurso             String? // ascensor / zona de cargue
+  empresa             String?
+  placaVehiculo       String?
+  enseres             Json            @default("[]")
+  pazYSalvoVerificado Boolean         @default(false)
+  estado              EstadoSolicitud @default(SOLICITADA)
+  aprobadaPorId       String?
+  observaciones       String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  deletedAt           DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── GOBIERNO ───────────────────────────────
+
+model Asamblea {
+  id                    String               @id @default(cuid())
+  conjuntoId            String
+  conjunto              Conjunto             @relation(fields: [conjuntoId], references: [id])
+  titulo                String
+  tipo                  TipoAsamblea
+  modalidad             ModalidadAsamblea    @default(PRESENCIAL)
+  fecha                 DateTime
+  lugar                 String?
+  enlace                String?
+  convocatoriaTexto     String?
+  convocatoriaEnviadaEn DateTime?
+  ordenDelDia           Json                 @default("[]") // [{orden, titulo, descripcion, votacionId?}]
+  quorumRequerido       Decimal              @default(50.000001) @db.Decimal(9, 6)
+  limitePoderes         Int                  @default(2)
+  estado                EstadoAsamblea       @default(BORRADOR)
+  codigoAsistencia      String               @unique @default(cuid())
+  actaTexto             String?
+  actaCodigo            String?              @unique
+  presidenteNombre      String?
+  secretarioNombre      String?
+  firmaPresidente       String?
+  firmaSecretario       String?
+  actaPublicadaEn       DateTime?
+  compromisos           Json                 @default("[]")
+  iniciadaEn            DateTime?
+  finalizadaEn          DateTime?
+  asistencias           AsistenciaAsamblea[]
+  poderes               PoderAsamblea[]
+  votaciones            Votacion[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  deletedAt             DateTime?
+
+  @@index([conjuntoId])
+}
+
+model AsistenciaAsamblea {
+  id            String         @id @default(cuid())
+  conjuntoId    String
+  asambleaId    String
+  asamblea      Asamblea       @relation(fields: [asambleaId], references: [id])
+  unidadId      String
+  unidad        Unidad         @relation(fields: [unidadId], references: [id])
+  personaNombre String?
+  usuarioId     String?
+  tipo          TipoAsistencia @default(PRESENCIAL)
+  coeficiente   Decimal        @db.Decimal(9, 6)
+  poderId       String?
+  registradaEn  DateTime       @default(now())
+  salidaEn      DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([asambleaId, unidadId])
+  @@index([conjuntoId])
+}
+
+model PoderAsamblea {
+  id                 String      @id @default(cuid())
+  conjuntoId         String
+  asambleaId         String
+  asamblea           Asamblea    @relation(fields: [asambleaId], references: [id])
+  unidadId           String // unidad que otorga el poder
+  otorganteNombre    String
+  apoderadoNombre    String
+  apoderadoDocumento String?
+  apoderadoUsuarioId String?
+  documentoUrl       String?
+  estado             EstadoPoder @default(PENDIENTE)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  deletedAt          DateTime?
+
+  @@unique([asambleaId, unidadId])
+  @@index([conjuntoId])
+}
+
+model Votacion {
+  id          String         @id @default(cuid())
+  conjuntoId  String
+  conjunto    Conjunto       @relation(fields: [conjuntoId], references: [id])
+  asambleaId  String?
+  asamblea    Asamblea?      @relation(fields: [asambleaId], references: [id])
+  puntoOrden  Int?
+  pregunta    String
+  descripcion String?
+  opciones    Json // [{id, texto}]
+  tipoMayoria TipoMayoria    @default(SIMPLE)
+  ponderacion Ponderacion    @default(COEFICIENTE)
+  quienVota   QuienVota      @default(PROPIETARIOS)
+  secreto     Boolean        @default(false)
+  inicio      DateTime       @default(now())
+  fin         DateTime
+  estado      EstadoVotacion @default(ABIERTA)
+  resultado   Json?
+  codigoActa  String?        @unique
+  votos       Voto[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Voto {
+  id              String    @id @default(cuid())
+  conjuntoId      String
+  votacionId      String
+  votacion        Votacion  @relation(fields: [votacionId], references: [id])
+  unidadId        String
+  unidad          Unidad    @relation(fields: [unidadId], references: [id])
+  opcionId        String
+  usuarioId       String?
+  votanteNombre   String?
+  coeficiente     Decimal   @db.Decimal(9, 6)
+  porPoder        Boolean   @default(false)
+  comprobanteHash String    @unique
+  emitidoEn       DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  @@unique([votacionId, unidadId])
+  @@index([conjuntoId])
+}
+
+model MiembroConsejo {
+  id            String       @id @default(cuid())
+  conjuntoId    String
+  personaId     String?
+  usuarioId     String?
+  nombre        String
+  unidadCodigo  String?
+  cargo         CargoConsejo @default(VOCAL)
+  periodoInicio DateTime
+  periodoFin    DateTime
+  activo        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model ReunionConsejo {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  fecha      DateTime
+  tema       String
+  asistentes String[]
+  actaTexto  String?
+  decisiones String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── ACTIVOS, MANTENIMIENTO, PROVEEDORES ───────────────────────────────
+
+model Activo {
+  id            String              @id @default(cuid())
+  conjuntoId    String
+  conjunto      Conjunto            @relation(fields: [conjuntoId], references: [id])
+  nombre        String
+  categoria     String
+  ubicacion     String?
+  zonaId        String?
+  zona          ZonaComun?          @relation(fields: [zonaId], references: [id])
+  marca         String?
+  modelo        String?
+  serie         String?
+  fechaCompra   DateTime?
+  valor         Decimal?            @db.Decimal(14, 2)
+  vidaUtilAnios Int?
+  proveedorId   String?
+  proveedor     Proveedor?          @relation(fields: [proveedorId], references: [id])
+  garantiaVence DateTime?
+  fotos         String[]
+  manuales      String[]
+  codigoQr      String              @unique @default(cuid())
+  estado        EstadoActivo        @default(OPERATIVO)
+  notas         String?
+  planes        PlanMantenimiento[]
+  ordenes       OrdenTrabajo[]
+  tickets       Ticket[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model PlanMantenimiento {
+  id               String            @id @default(cuid())
+  conjuntoId       String
+  activoId         String?
+  activo           Activo?           @relation(fields: [activoId], references: [id])
+  zonaId           String?
+  nombre           String
+  tipo             TipoMantenimiento @default(PREVENTIVO)
+  frecuenciaDias   Int
+  proximaFecha     DateTime
+  ultimaEjecucion  DateTime?
+  responsableId    String?
+  proveedorId      String?
+  proveedor        Proveedor?        @relation(fields: [proveedorId], references: [id])
+  checklist        String[]
+  costoEstimado    Decimal?          @db.Decimal(14, 2)
+  diasAnticipacion Int               @default(7)
+  activoPlan       Boolean           @default(true)
+  ordenes          OrdenTrabajo[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+
+  @@index([conjuntoId])
+}
+
+model OrdenTrabajo {
+  id              String             @id @default(cuid())
+  conjuntoId      String
+  numero          Int
+  origen          OrigenOrden        @default(MANUAL)
+  planId          String?
+  plan            PlanMantenimiento? @relation(fields: [planId], references: [id])
+  ticketId        String?
+  activoId        String?
+  activo          Activo?            @relation(fields: [activoId], references: [id])
+  zonaId          String?
+  proveedorId     String?
+  proveedor       Proveedor?         @relation(fields: [proveedorId], references: [id])
+  asignadoAId     String?
+  titulo          String
+  descripcion     String?
+  fechaProgramada DateTime
+  fechaInicio     DateTime?
+  fechaCierre     DateTime?
+  costo           Decimal?           @db.Decimal(14, 2)
+  checklist       Json               @default("[]") // [{item, ok}]
+  evidencias      String[]
+  estado          EstadoOrden        @default(PENDIENTE)
+  notasCierre     String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?
+
+  @@unique([conjuntoId, numero])
+  @@index([conjuntoId])
+}
+
+model Proveedor {
+  id                    String                  @id @default(cuid())
+  conjuntoId            String
+  conjunto              Conjunto                @relation(fields: [conjuntoId], references: [id])
+  nit                   String
+  razonSocial           String
+  categoria             String
+  contactoNombre        String?
+  telefono              String?
+  email                 String?
+  direccion             String?
+  tarifas               String?
+  directorioComunitario Boolean                 @default(false)
+  beneficioComunidad    String?
+  calificacionPromedio  Decimal                 @default(0) @db.Decimal(3, 2)
+  usuarioId             String?
+  activo                Boolean                 @default(true)
+  documentos            DocumentoProveedor[]
+  calificaciones        CalificacionProveedor[]
+  contratos             Contrato[]
+  activos               Activo[]
+  planes                PlanMantenimiento[]
+  ordenes               OrdenTrabajo[]
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  deletedAt             DateTime?
+
+  @@index([conjuntoId])
+}
+
+model DocumentoProveedor {
+  id          String           @id @default(cuid())
+  conjuntoId  String
+  proveedorId String
+  proveedor   Proveedor        @relation(fields: [proveedorId], references: [id])
+  tipo        TipoDocProveedor
+  archivoUrl  String?
+  vence       DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model CalificacionProveedor {
+  id            String    @id @default(cuid())
+  conjuntoId    String
+  proveedorId   String
+  proveedor     Proveedor @relation(fields: [proveedorId], references: [id])
+  usuarioId     String
+  usuarioNombre String?
+  puntaje       Int
+  comentario    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([proveedorId, usuarioId])
+  @@index([conjuntoId])
+}
+
+model Contrato {
+  id                   String         @id @default(cuid())
+  conjuntoId           String
+  proveedorId          String
+  proveedor            Proveedor      @relation(fields: [proveedorId], references: [id])
+  objeto               String
+  valor                Decimal        @db.Decimal(14, 2)
+  inicio               DateTime
+  fin                  DateTime
+  renovacionAutomatica Boolean        @default(false)
+  diasAlerta           Int            @default(30)
+  documentoUrl         String?
+  estado               EstadoContrato @default(VIGENTE)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  deletedAt            DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Presupuesto {
+  id         String             @id @default(cuid())
+  conjuntoId String
+  anio       Int
+  estado     EstadoPresupuesto  @default(BORRADOR)
+  asambleaId String?
+  notas      String?
+  rubros     RubroPresupuesto[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  deletedAt  DateTime?
+
+  @@unique([conjuntoId, anio])
+}
+
+model RubroPresupuesto {
+  id             String      @id @default(cuid())
+  conjuntoId     String
+  presupuestoId  String
+  presupuesto    Presupuesto @relation(fields: [presupuestoId], references: [id])
+  tipo           TipoRubro
+  nombre         String
+  cuentaContable String?
+  valorAnual     Decimal     @db.Decimal(14, 2)
+  gastos         Gasto[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Gasto {
+  id             String            @id @default(cuid())
+  conjuntoId     String
+  rubroId        String?
+  rubro          RubroPresupuesto? @relation(fields: [rubroId], references: [id])
+  proveedorId    String?
+  ordenTrabajoId String?
+  fecha          DateTime
+  descripcion    String
+  valor          Decimal           @db.Decimal(14, 2)
+  comprobanteUrl String?
+  estado         EstadoGasto       @default(PENDIENTE_APROBACION)
+  aprobadoPorId  String?
+  cuentaContable String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deletedAt      DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Empleado {
+  id           String    @id @default(cuid())
+  conjuntoId   String
+  nombre       String
+  documento    String?
+  cargo        String
+  turno        String?
+  telefono     String?
+  fotoUrl      String?
+  epsVence     DateTime?
+  arlVence     DateTime?
+  fechaIngreso DateTime?
+  documentos   String[]
+  activo       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── EMERGENCIAS ───────────────────────────────
+
+model PlanEmergencia {
+  id                  String    @id @default(cuid())
+  conjuntoId          String    @unique
+  puntosEncuentro     Json      @default("[]")
+  instrucciones       String?
+  telefonosEmergencia Json      @default("[]")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+}
+
+model Brigadista {
+  id          String        @id @default(cuid())
+  conjuntoId  String
+  personaId   String?
+  nombre      String
+  rol         RolBrigadista
+  torreNombre String?
+  telefono    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId])
+}
+
+model Simulacro {
+  id                  String    @id @default(cuid())
+  conjuntoId          String
+  fecha               DateTime
+  tipo                String
+  participantes       Int       @default(0)
+  tiempoEvacuacionMin Int?
+  observaciones       String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  @@index([conjuntoId])
+}
+
+// ─────────────────────────────── TRANSVERSALES ───────────────────────────────
+
+model Auditoria {
+  id               String    @id @default(cuid())
+  conjuntoId       String?
+  conjunto         Conjunto? @relation(fields: [conjuntoId], references: [id])
+  usuarioId        String?
+  usuarioNombre    String?
+  impersonadoPorId String?
+  accion           String
+  entidad          String
+  entidadId        String?
+  antes            Json?
+  despues          Json?
+  ip               String?
+  userAgent        String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  @@index([conjuntoId, createdAt])
+  @@index([entidad, entidadId])
+}
+
+model Adjunto {
+  id          String    @id @default(cuid())
+  conjuntoId  String
+  entidad     String
+  entidadId   String
+  url         String
+  nombre      String
+  mime        String
+  tamano      Int
+  subidoPorId String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([conjuntoId, entidad, entidadId])
+}
+
+model ImportacionApertura {
+  id            String            @id @default(cuid())
+  conjuntoId    String
+  tipo          String // UNIDADES | PROPIETARIOS | SALDOS | ZONAS | PARQUEADEROS | USUARIOS
+  archivoNombre String
+  estado        EstadoImportacion @default(VALIDANDO)
+  totalFilas    Int               @default(0)
+  filasOk       Int               @default(0)
+  filasError    Int               @default(0)
+  errores       Json              @default("[]")
+  resumen       Json?
+  creadoPorId   String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+}
+
+model ConfiguracionIntegracion {
+  id              String          @id @default(cuid())
+  conjuntoId      String?
+  tipo            TipoIntegracion
+  datosCifrados   String
+  activo          Boolean         @default(true)
+  ultimaPrueba    DateTime?
+  ultimoResultado String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+
+  @@unique([conjuntoId, tipo])
+}
+
+model Backup {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  archivoUrl String
+  tamano     Int
+  registros  Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}
+
+model ConsultaIA {
+  id         String    @id @default(cuid())
+  conjuntoId String
+  usuarioId  String
+  tipo       String // PREGUNTA_REGLAMENTO | BORRADOR_PQRS | RESUMEN_ACTA
+  pregunta   String
+  respuesta  String
+  tokens     Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([conjuntoId])
+}

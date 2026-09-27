@@ -1,0 +1,28 @@
+{
+  "app": {
+    "nombre": "MiConjunto",
+    "buscar": "Buscar unidad, persona, placa…",
+    "sinConexion": "Sin conexión",
+    "pendientesSincronizar": "{count, plural, =0 {Todo sincronizado} one {# registro pendiente por sincronizar} other {# registros pendientes por sincronizar}}"
+  },
+  "nav": {
+    "inicio": "Inicio",
+    "cuenta": "Cuenta",
+    "pagar": "Pagar",
+    "reservar": "Reservar",
+    "visitantes": "Visitantes",
+    "porteria": "Portería",
+    "tickets": "PQRS",
+    "mas": "Más",
+    "cartera": "Cartera"
+  },
+  "acciones": {
+    "guardar": "Guardar",
+    "cancelar": "Cancelar",
+    "eliminar": "Eliminar",
+    "editar": "Editar",
+    "nuevo": "Nuevo",
+    "exportar": "Exportar",
+    "confirmar": "Confirmar"
+  }
+}
