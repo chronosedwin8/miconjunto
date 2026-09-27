@@ -150,7 +150,7 @@ export async function aceptarInvitacion(
     const invitadoPorResidente = inv.invitadoPorId
       ? !!(await prisma.membresiaConjunto.findFirst({ where: { usuarioId: inv.invitadoPorId, conjuntoId: inv.conjuntoId, rol: { basadoEnClave: { in: ["PROPIETARIO", "RESIDENTE", "CONVIVIENTE"] } } } }))
       : false;
-    vinculoPendiente = tipo === "ARRENDATARIO" && invitadoPorResidente;
+    vinculoPendiente = (tipo === "ARRENDATARIO" || tipo === "COPROPIETARIO") && invitadoPorResidente;
     const existe = await prisma.vinculoUnidad.findFirst({ where: { personaId: persona.id, unidadId: inv.unidadId, deletedAt: null } });
     if (!existe) {
       await prisma.vinculoUnidad.create({

@@ -160,6 +160,21 @@ export async function seedPersonas(s: SeedState) {
   const t1101Veh = await prisma.vehiculo.findFirst({ where: { unidadId: t1101.id } });
   if (!t1101Veh) await prisma.vehiculo.create({ data: { conjuntoId, unidadId: t1101.id, placa: "JKL482", tipo: "CARRO", marca: "Mazda", modelo: "2022", color: "Rojo", soatVence: new Date(Date.now() + 12 * 86400000), parqueaderoId: t1101.parqueaderos[0]?.id } });
 
+  // ── Arrendatarios registrados por propietarios, pendientes de aprobación (sin usar rng: no altera otros seeds) ──
+  const libres = unidades.filter((u) => u.estadoOcupacion === "DESOCUPADA" || u.estadoOcupacion === "EN_VENTA").slice(0, 2);
+  const pendientes = [
+    { nombres: "Camila", apellidos: "Restrepo Díaz", doc: "1045123456", tel: "3014567890" },
+    { nombres: "Jhon Jairo", apellidos: "Mercado Ariza", doc: "1140987654", tel: "3157654321" },
+  ];
+  for (let i = 0; i < libres.length; i++) {
+    const d = pendientes[i];
+    if (await prisma.persona.findFirst({ where: { conjuntoId, numeroDocumento: d.doc } })) continue;
+    const p = await prisma.persona.create({
+      data: { conjuntoId, tipoDocumento: "CC", numeroDocumento: d.doc, nombres: d.nombres, apellidos: d.apellidos, telefono: d.tel, email: `${d.nombres.split(" ")[0].toLowerCase()}.${d.doc.slice(-4)}@correo.co`, fechaNacimiento: new Date(1990 + i * 3, 4, 12) },
+    });
+    await prisma.vinculoUnidad.create({ data: { conjuntoId, personaId: p.id, unidadId: libres[i].id, tipo: "ARRENDATARIO", estado: "PENDIENTE_APROBACION", principal: true } });
+  }
+
   const nombresMascota = ["Luna", "Max", "Rocky", "Coco", "Toby", "Nala", "Simba", "Kira", "Bruno", "Lola", "Milo", "Canela"];
   for (let i = 0; i < 35; i++) {
     const u = i === 0 ? t1101 : rng.pick(residenciales);
