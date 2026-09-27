@@ -46,7 +46,12 @@ export const zs = {
   optNumber: () => z.preprocess((v) => (empty(v) ? null : Number(String(v).replace(",", "."))), z.number().nullable()).optional(),
   money: (min = 0) => z.preprocess((v) => (empty(v) ? undefined : parseMoney(v)), z.number({ error: "Valor no válido" }).min(min)),
   optMoney: () => z.preprocess((v) => (empty(v) ? null : parseMoney(v)), z.number().min(0).nullable()).optional(),
-  bool: () => z.preprocess((v) => v === true || v === "true" || v === "on" || v === "1" || v === 1, z.boolean()),
+  bool: () =>
+    z.preprocess((raw) => {
+      // CheckboxField envía un oculto "false" antes del checkbox: se toma el último valor.
+      const v = Array.isArray(raw) ? raw[raw.length - 1] : raw;
+      return v === true || v === "true" || v === "on" || v === "1" || v === 1;
+    }, z.boolean()),
   date: () =>
     z.preprocess((v) => (empty(v) ? undefined : v instanceof Date ? v : parseLocal(String(v))), z.date({ error: "Fecha no válida" })),
   optDate: () =>

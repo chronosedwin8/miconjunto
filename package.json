@@ -22,7 +22,8 @@
     "db:test:prepare": "tsx scripts/prepare-test-db.ts",
     "screens": "tsx scripts/screens.ts",
     "icons": "tsx scripts/generate-icons.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "plantillas": "tsx scripts/generate-templates.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

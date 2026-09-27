@@ -55,3 +55,507 @@
  ○ (serwist) Serwist is disabled.
  ○ (serwist) Serwist is disabled.
  ✓ Ready in 5.3s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1223ms (224 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 9.3s (1782 modules)
+ GET /login 200 in 11598ms
+ ○ Compiling /inicio ...
+ ✓ Compiled /inicio in 4.5s (2975 modules)
+ GET /inicio 200 in 5163ms
+ POST /login 303 in 6097ms
+ GET /inicio 200 in 106ms
+ ○ Compiling /seleccionar-conjunto ...
+ ✓ Compiled /seleccionar-conjunto in 4s (3954 modules)
+ GET /seleccionar-conjunto 200 in 5102ms
+ GET /conjunto 307 in 5137ms
+ GET /seleccionar-conjunto 200 in 179ms
+ GET /seleccionar-conjunto 200 in 260ms
+ ○ Compiling /conjunto/unidades ...
+ ✓ Compiled /conjunto/unidades in 1043ms (3998 modules)
+ GET /conjunto/unidades 307 in 1866ms
+ GET /seleccionar-conjunto 200 in 275ms
+ ○ Compiling /conjunto/zonas ...
+ ✓ Compiled /conjunto/zonas in 889ms (4003 modules)
+ GET /conjunto/zonas 307 in 1545ms
+ GET /seleccionar-conjunto 200 in 262ms
+ ✓ Compiled in 741ms (643 modules)
+ GET /login 200 in 230ms
+ GET /inicio 200 in 103ms
+ POST /login 303 in 501ms
+ GET /seleccionar-conjunto 200 in 264ms
+ GET /conjunto 307 in 293ms
+ GET /seleccionar-conjunto 200 in 186ms
+ GET /seleccionar-conjunto 200 in 233ms
+ GET /conjunto/unidades 307 in 183ms
+ GET /seleccionar-conjunto 200 in 178ms
+ GET /conjunto/zonas 307 in 155ms
+ GET /seleccionar-conjunto 200 in 174ms
+ ✓ Compiled in 2.7s (4017 modules)
+ GET /login 200 in 941ms
+ GET /inicio 200 in 135ms
+ POST /login 303 in 584ms
+ GET /seleccionar-conjunto 200 in 415ms
+ GET /conjunto 307 in 440ms
+ GET /seleccionar-conjunto 200 in 174ms
+ GET /seleccionar-conjunto 200 in 224ms
+ ✓ Compiled in 3.2s (4017 modules)
+ GET /login 200 in 868ms
+ GET /inicio 200 in 159ms
+ POST /login 303 in 539ms
+ GET /seleccionar-conjunto 200 in 482ms
+ GET /conjunto 307 in 506ms
+ GET /seleccionar-conjunto 200 in 202ms
+ GET /seleccionar-conjunto 200 in 462ms
+ ✓ Compiled in 1900ms (4017 modules)
+ GET /login 200 in 633ms
+ GET /inicio 200 in 152ms
+ POST /login 303 in 538ms
+ GET /seleccionar-conjunto 200 in 398ms
+ GET /conjunto 307 in 416ms
+ GET /seleccionar-conjunto 200 in 196ms
+ GET /seleccionar-conjunto 200 in 219ms
+ GET /conjunto/unidades 307 in 192ms
+ GET /seleccionar-conjunto 200 in 174ms
+ GET /conjunto/zonas 307 in 176ms
+ GET /seleccionar-conjunto 200 in 162ms
+ ✓ Compiled in 308ms (643 modules)
+ ✓ Compiled in 331ms (643 modules)
+ GET /login 200 in 139ms
+ GET /inicio 200 in 95ms
+ POST /login 303 in 235ms
+ GET /seleccionar-conjunto 200 in 114ms
+ GET /seleccionar-conjunto 200 in 83ms
+ GET /inicio 200 in 179ms
+ POST /seleccionar-conjunto 303 in 287ms
+ ○ Compiling /api/events ...
+ ✓ Compiled /api/events in 989ms (4014 modules)
+ GET /api/events?canales=conjunto 200 in 4431ms
+ ✓ Compiled in 311ms (644 modules)
+ ✓ Compiled in 301ms (644 modules)
+ GET /login 200 in 543ms
+ GET /inicio 200 in 123ms
+ POST /login 303 in 413ms
+ GET /seleccionar-conjunto 200 in 369ms
+ GET /conjunto 307 in 398ms
+ GET /seleccionar-conjunto 200 in 188ms
+ GET /seleccionar-conjunto 200 in 244ms
+ GET /conjunto/unidades 307 in 183ms
+ GET /seleccionar-conjunto 200 in 145ms
+ GET /conjunto/zonas 307 in 185ms
+ GET /seleccionar-conjunto 200 in 206ms
+ ✓ Compiled in 359ms (644 modules)
+ ✓ Compiled in 299ms (644 modules)
+ GET /login 200 in 154ms
+ GET /inicio 200 in 87ms
+ POST /login 303 in 224ms
+ GET /seleccionar-conjunto 200 in 112ms
+ GET /seleccionar-conjunto 200 in 103ms
+ GET /inicio 200 in 119ms
+ POST /seleccionar-conjunto 303 in 207ms
+ GET /api/events?canales=conjunto 200 in 5427ms
+ GET /conjunto 200 in 1085ms
+ ✓ Compiled in 300ms (644 modules)
+ ✓ Compiled in 290ms (644 modules)
+ GET /login 200 in 128ms
+ GET /inicio 200 in 87ms
+ POST /login 303 in 273ms
+ GET /seleccionar-conjunto 200 in 99ms
+ GET /seleccionar-conjunto 200 in 70ms
+ GET /inicio 200 in 156ms
+ POST /seleccionar-conjunto 303 in 249ms
+ GET /api/events?canales=conjunto 200 in 371ms
+ GET /conjunto 200 in 558ms
+ GET /api/events?canales=conjunto 200 in 2094ms
+ GET /conjunto/unidades 200 in 1067ms
+ GET /api/events?canales=conjunto 200 in 2362ms
+ GET /conjunto/zonas 200 in 393ms
+ GET /api/events?canales=conjunto 200 in 1273ms
+ ✓ Compiled in 2.1s (4028 modules)
+ ✓ Compiled in 1426ms (4028 modules)
+ ✓ Compiled in 237ms (644 modules)
+ ✓ Compiled in 242ms (644 modules)
+ ✓ Compiled in 261ms (644 modules)
+ ✓ Compiled in 245ms (644 modules)
+ ✓ Compiled in 344ms (644 modules)
+ ✓ Compiled in 276ms (644 modules)
+ ✓ Compiled in 943ms (3262 modules)
+ ✓ Compiled in 301ms (644 modules)
+ ✓ Compiled in 271ms (644 modules)
+ ✓ Compiled in 272ms (644 modules)
+ ✓ Compiled in 230ms (644 modules)
+ ✓ Compiled in 255ms (644 modules)
+ ✓ Compiled in 248ms (644 modules)
+ ✓ Compiled in 240ms (644 modules)
+ ✓ Compiled in 278ms (644 modules)
+ ✓ Compiled in 794ms (3262 modules)
+ ✓ Compiled in 278ms (644 modules)
+ ✓ Compiled in 606ms (3276 modules)
+ ✓ Compiled in 1671ms (3052 modules)
+ ✓ Compiled in 949ms (3276 modules)
+ ✓ Compiled in 849ms (3262 modules)
+ ✓ Compiled in 1046ms (3262 modules)
+ ✓ Compiled in 327ms (644 modules)
+ ✓ Compiled in 248ms (644 modules)
+ ✓ Compiled in 239ms (644 modules)
+ ✓ Compiled in 569ms (3276 modules)
+ ✓ Compiled in 238ms (644 modules)
+ ✓ Compiled in 712ms (3262 modules)
+ ✓ Compiled in 287ms (644 modules)
+ ✓ Compiled in 625ms (3276 modules)
+ ✓ Compiled in 358ms (644 modules)
+ ✓ Compiled in 1160ms (3276 modules)
+ ✓ Compiled in 299ms (644 modules)
+ ✓ Compiled in 739ms (3262 modules)
+ ✓ Compiled in 237ms (644 modules)
+ ✓ Compiled in 237ms (644 modules)
+ ✓ Compiled in 274ms (644 modules)
+ ✓ Compiled in 268ms (644 modules)
+ ✓ Compiled in 231ms (644 modules)
+ ✓ Compiled in 249ms (644 modules)
+ ✓ Compiled in 244ms (644 modules)
+ ✓ Compiled in 2.3s (3052 modules)
+ ✓ Compiled in 940ms (3052 modules)
+ ✓ Compiled in 395ms (644 modules)
+ ✓ Compiled in 1127ms (3262 modules)
+ ✓ Compiled in 299ms (644 modules)
+ ✓ Compiled in 604ms (3262 modules)
+ ✓ Compiled in 231ms (644 modules)
+ ✓ Compiled in 656ms (3276 modules)
+ ✓ Compiled in 258ms (644 modules)
+ ✓ Compiled in 297ms (644 modules)
+ ✓ Compiled in 260ms (644 modules)
+ ✓ Compiled in 224ms (644 modules)
+ ✓ Compiled in 473ms (3262 modules)
+ ✓ Compiled in 236ms (644 modules)
+ ✓ Compiled in 241ms (644 modules)
+ ✓ Compiled in 251ms (644 modules)
+ ✓ Compiled in 660ms (3262 modules)
+ ✓ Compiled in 275ms (644 modules)
+ ✓ Compiled in 465ms (3262 modules)
+ ✓ Compiled in 2.4s (3059 modules)
+ ✓ Compiled in 326ms (644 modules)
+ ✓ Compiled in 278ms (644 modules)
+ ✓ Compiled in 711ms (3059 modules)
+ ✓ Compiled in 275ms (644 modules)
+ ✓ Compiled in 549ms (3269 modules)
+ ✓ Compiled in 939ms (3283 modules)
+ ✓ Compiled in 242ms (644 modules)
+ ✓ Compiled in 624ms (3283 modules)
+ ✓ Compiled in 232ms (644 modules)
+ ✓ Compiled in 822ms (3283 modules)
+ ✓ Compiled in 238ms (644 modules)
+ ✓ Compiled in 454ms (3269 modules)
+ ✓ Compiled in 739ms (3269 modules)
+ ✓ Compiled in 250ms (644 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 732ms (2455 modules)
+ GET /login 200 in 1580ms
+ GET /inicio 200 in 147ms
+ POST /login 303 in 645ms
+ GET /seleccionar-conjunto 200 in 186ms
+ GET /seleccionar-conjunto 200 in 74ms
+ GET /inicio 200 in 275ms
+ POST /seleccionar-conjunto 303 in 361ms
+ ○ Compiling /api/events ...
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/roles/page.tsx
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/roles/page.tsx
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/roles/page.tsx
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/roles/page.tsx
+ GET /configuracion/roles 500 in 10673ms
+ GET /api/events?canales=conjunto 500 in 10639ms
+ GET /inicio 200 in 2141ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\eortiz\Desktop\MiConjunto\.next\cache\webpack\client-development-fallback\0.pack.gz_' -> 'C:\Users\eortiz\Desktop\MiConjunto\.next\cache\webpack\client-development-fallback\0.pack.gz'
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/roles/page.tsx
+ GET /configuracion/roles 500 in 391ms
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/visibilidad/page.tsx
+ GET /apertura?paso=2 500 in 1979ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/roles/page.tsx
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ./app/(app)/configuracion/actions.ts
+Error:   [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:61:1]
+ [2m58[0m |           porcentajeProntoPago: num(0, 50),
+ [2m59[0m |           calculoCuota: z.enum(["VALOR_FIJO", "COEFICIENTE"]).optional(),
+ [2m60[0m |           diasGraciaMora: int(0, 60),
+ [2m61[0m |           ordenAplicacion: z.preprocess((v) => (typeof v === "string" ? v.split(",") : v), z.array(z.enum(["INTERES_MORA", "MULTA", "ANTIGUAS", "ACTUALES"])).optional()),
+    : [35;1m                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m62[0m |         })
+ [2m63[0m |         .partial()
+ [2m64[0m |         .optional(),
+    `----
+  [31mx[0m Server Actions must be async functions.
+
+    ,-[[36;1;4mC:\Users\eortiz\Desktop\MiConjunto\app\(app)\configuracion\actions.ts[0m:75:1]
+ [2m72[0m |           alertaHorasPermanencia: int(1, 72),
+ [2m73[0m |           exigirSeguridadSocialContratistas: bool(),
+ [2m74[0m |           emergenciaATodos: bool(),
+ [2m75[0m |           checklistTurno: z.preprocess((v) => (typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : v), z.array(z.string()).optional()),
+    : [35;1m                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+ [2m76[0m |         })
+ [2m77[0m |         .partial()
+ [2m78[0m |         .optional(),
+    `----
+
+Import trace for requested module:
+./app/(app)/configuracion/actions.ts
+./app/(app)/configuracion/visibilidad/page.tsx
+ GET /login 500 in 36ms
+ GET /login 500 in 54ms
+ ✓ Compiled /conjunto/unidades/[id] in 1221ms (4390 modules)
+ ✓ Compiled in 317ms (806 modules)
+ ✓ Compiled in 384ms (806 modules)
+ GET /login 200 in 725ms
+ GET /inicio 200 in 158ms
+ POST /login 303 in 581ms
+ GET /seleccionar-conjunto 200 in 184ms
+ GET /seleccionar-conjunto 200 in 85ms
+ GET /inicio 200 in 211ms
+ POST /seleccionar-conjunto 303 in 320ms
+ ○ Compiling /api/events ...
+ ✓ Compiled /api/events in 1169ms (3555 modules)
+ ✓ Compiled (3565 modules)
+ GET /api/events?canales=conjunto 200 in 3265ms
+ GET /inicio 200 in 409ms
+ GET /configuracion/roles 200 in 3501ms
+ ○ Compiling /configuracion/visibilidad ...
+ ✓ Compiled /configuracion/visibilidad in 537ms (3570 modules)
+ GET /api/events?canales=conjunto 200 in 2611ms
+ GET /configuracion/visibilidad 200 in 1618ms
+ ○ Compiling /apertura ...
+ ✓ Compiled /apertura in 593ms (3595 modules)
+ GET /api/events?canales=conjunto 200 in 3665ms
+ GET /apertura?paso=2 200 in 2494ms
+ ○ Compiling /conjunto/unidades/nueva ...
+ ✓ Compiled /conjunto/unidades/nueva in 764ms (3605 modules)
+ GET /api/events?canales=conjunto 200 in 2667ms
+ GET /conjunto/unidades/nueva 200 in 1660ms
+ GET /api/events?canales=conjunto 200 in 1221ms
+ GET /login 200 in 177ms
+ GET /inicio 200 in 98ms
+ POST /login 303 in 451ms
+ ○ Compiling /superadmin ...
+ ✓ Compiled /superadmin in 1925ms (4413 modules)
+ GET /superadmin 200 in 2669ms
+ GET /superadmin 200 in 2455ms
+ ○ Compiling /superadmin/jobs ...
+ ✓ Compiled /superadmin/jobs in 2.1s (4418 modules)
+ GET /superadmin/jobs 200 in 2661ms
+ ✓ Compiled in 293ms (808 modules)
+ ✓ Compiled in 311ms (808 modules)
+ ✓ Compiled in 303ms (808 modules)
+ ✓ Compiled in 300ms (808 modules)
+ ✓ Compiled in 337ms (808 modules)
+ ✓ Compiled in 329ms (808 modules)
+ ✓ Compiled in 289ms (808 modules)
+ ✓ Compiled in 305ms (808 modules)
+ ✓ Compiled in 284ms (808 modules)
+ ✓ Compiled in 286ms (808 modules)
+ ✓ Compiled in 316ms (808 modules)
+ ✓ Compiled in 2.5s (4594 modules)
+ ✓ Compiled in 400ms (808 modules)

@@ -22,9 +22,59 @@ export async function salirImpersonacionAction() {
   await unstable_update({ salirImpersonacion: true } as never);
 }
 
-export async function entrarConjuntoAction(conjuntoId: string) {
+export async function entrarConjuntoAction(conjuntoId: string, destino?: string | FormData) {
   const su = await requireSuperAdmin();
   await audit({ userId: su.userId, nombre: su.nombre, conjuntoId }, "soporte_entrar_conjunto", "Conjunto", conjuntoId);
   await unstable_update({ conjuntoId } as never);
-  redirect("/inicio");
+  redirect(typeof destino === "string" && destino.startsWith("/") ? destino : "/inicio");
 }
+
+// ── Acciones de formularios (devuelven ActionResult) ──
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { toActionError, type ActionResult } from "@/lib/action";
+import { zs } from "@/lib/validation";
+import { actualizarConjuntoSaas, guardarPlan, nuevoConjunto } from "@/lib/superadmin/service";
+
+function saAction<S extends z.ZodType, R>(schema: S, fn: (input: z.output<S>, actor: { userId: string; nombre: string }) => Promise<R>) {
+  return async (raw: z.input<S>): Promise<ActionResult<R>> => {
+    try {
+      const su = await requireSuperAdmin();
+      const data = await fn(schema.parse(raw), { userId: su.userId, nombre: su.nombre });
+      revalidatePath("/superadmin", "layout");
+      return { ok: true, data };
+    } catch (e) {
+      return toActionError(e);
+    }
+  };
+}
+
+export const crearConjuntoAction = saAction(
+  z.object({
+    nombre: zs.text(3, 120),
+    nit: zs.optText(20),
+    digitoVerificacion: zs.optText(1),
+    direccion: zs.optText(200),
+    ciudad: zs.optText(80),
+    departamento: zs.optText(80),
+    municipioCodigo: zs.optText(5),
+    telefono: zs.optText(30),
+    email: zs.optEmail(),
+    tipo: z.enum(["EDIFICIO", "CONJUNTO_CASAS", "MIXTO"]),
+    planId: zs.optId(),
+    adminEmail: zs.optEmail(),
+    adminNombre: zs.optText(120),
+    fechaInicioOperacion: zs.optDate(),
+  }),
+  async (input, actor) => ({ id: (await nuevoConjunto(actor, input)).id }),
+);
+
+export const actualizarConjuntoSaasAction = saAction(
+  z.object({ id: zs.id(), estado: z.enum(["ACTIVO", "SUSPENDIDO", "EN_APERTURA", "INACTIVO"]).optional(), planId: zs.optId(), modulosActivos: zs.list().optional() }),
+  async ({ id, ...data }, actor) => actualizarConjuntoSaas(actor, id, data),
+);
+
+export const guardarPlanAction = saAction(
+  z.object({ id: zs.optId(), nombre: zs.text(2, 60), descripcion: zs.optText(300), precioMensual: zs.money(), precioUnidad: zs.money(), maxUnidades: zs.int(1), modulos: zs.list(), activo: zs.bool() }),
+  async (input) => ({ id: (await guardarPlan(input)).id }),
+);

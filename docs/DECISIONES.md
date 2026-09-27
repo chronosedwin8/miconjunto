@@ -20,3 +20,15 @@ Decisiones tomadas donde la especificación era ambigua o el entorno obligó a e
 14. **Tasa de mora por defecto**: 24,36 % E.A. (≈1,833 % mensual) como referencia de 1,5 × IBC; es parámetro editable con historial (`TasaMora`), nunca fija en código.
 15. **Seed destructivo** — `npm run seed` hace `TRUNCATE` de todas las tablas y recrea la demo; es determinista (PRNG con semilla fija).
 16. **Rutas en español** (`/inicio`, `/cuenta`, `/porteria`…), coherentes con la UI.
+
+## Fase 1 — Multi-tenant, roles, estructura, SuperAdmin
+
+17. **Roles base instanciados por conjunto** (`Rol` con `base = true`) para que cada conjunto pueda ajustar la matriz de permisos sin afectar a otros. Los roles personalizados copian un rol base y heredan su *alcance* (`basadoEnClave`).
+18. **Visibilidad de campos e indicadores como permisos** (`campos.*`, `secciones.*`) editables en una matriz rol × permiso: un solo mecanismo de autorización.
+19. **El rol ADMINISTRADOR base no puede perder** `configuracion.ver` ni `configuracion.roles` (evita quedar sin acceso).
+20. **Importación en dos pasos**: validar (fila por fila, sin escribir) → aplicar solo filas válidas. Es idempotente por código de unidad / documento de persona. Reporte de errores descargable en Excel.
+21. **Asistente de apertura**: el paso 1 (crear conjunto) está en el panel SuperAdmin; los pasos 2–8 se hacen dentro del conjunto (`/apertura`) reutilizando el importador, para que el mismo flujo sirva al SuperAdmin y al administrador.
+22. **Checkboxes**: `CheckboxField` envía un oculto `false` antes del checkbox, de modo que desmarcar sí guarda `false`.
+23. **Referencia de pago numérica de 14 dígitos** (6 del conjunto + 8 consecutivos), apta para convenios bancarios y conciliación.
+24. **Interés de mora simple sobre capital** (sin capitalizar intereses; prohibido el anatocismo), base 30 días; se liquida como concepto separado `INTERES_MORA`.
+25. **Saldo a favor** = pagos aprobados − aplicaciones; se aplica automáticamente a cuotas nuevas.

@@ -49,7 +49,15 @@ async function main() {
     await page.goto(`${BASE}/login`, { waitUntil: "networkidle", timeout: 120000 });
     await page.fill("#email", email);
     await page.fill("#password", pass);
-    await Promise.all([page.waitForURL((u) => !u.pathname.startsWith("/login"), { timeout: 120000 }), page.click("button[type=submit]")]);
+    await page.click("button[type=submit]");
+    await page.waitForURL((u) => !u.pathname.startsWith("/login"), { timeout: 120000 });
+    await page.waitForTimeout(1500);
+    await page.waitForLoadState("networkidle");
+    if (page.url().includes("/seleccionar-conjunto")) {
+      await page.locator("form button", { hasText: "Conjunto Residencial Demo" }).click();
+      await page.waitForURL((u) => u.pathname.startsWith("/inicio"), { timeout: 120000 });
+      await page.waitForLoadState("networkidle");
+    }
   }
   fs.mkdirSync("screenshots-tmp", { recursive: true });
   for (const p of paths.length ? paths : ["/inicio"]) {

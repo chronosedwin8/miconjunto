@@ -1,6 +1,6 @@
 import type { TipoAlerta } from "@prisma/client";
 import type { Ctx } from "@/lib/auth/context";
-import { conjuntoConfig } from "@/lib/auth/context";
+import { conjuntoConfig } from "@/lib/conjunto/config";
 import { prisma } from "@/lib/db";
 import { notify, usuariosConPermiso, usuariosConRol } from "@/lib/notificaciones";
 import { emit } from "@/lib/events";

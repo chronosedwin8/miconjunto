@@ -4,7 +4,6 @@ import type { Conjunto } from "@prisma/client";
 import { prisma, withTenant, type TenantClient } from "@/lib/db";
 import { loadRolePerms, SUPERADMIN_PERMS } from "@/lib/permisos";
 import { AppError } from "@/lib/errors";
-import { parseConfig } from "@/lib/conjunto/config";
 import { auth } from "./index";
 
 export type Ctx = {
@@ -150,6 +149,4 @@ export async function ctxOrThrow(): Promise<Ctx> {
   return ctx;
 }
 
-export function conjuntoConfig(ctx: Pick<Ctx, "conjunto">) {
-  return parseConfig(ctx.conjunto.config);
-}
+export { conjuntoConfig } from "@/lib/conjunto/config";

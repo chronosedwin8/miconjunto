@@ -87,3 +87,8 @@ export function parseConfig(raw: unknown): ConjuntoConfig {
   if (r.success) return r.data;
   return configSchema.parse({});
 }
+
+/** Configuración efectiva del conjunto del contexto (con valores por defecto). */
+export function conjuntoConfig(ctx: { conjunto: { config: unknown } }): ConjuntoConfig {
+  return parseConfig(ctx.conjunto.config);
+}

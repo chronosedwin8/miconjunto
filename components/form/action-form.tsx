@@ -39,10 +39,16 @@ export function formToObject(fd: FormData) {
     if (typeof v !== "string") continue;
     if (k.startsWith("$ACTION")) continue;
     if (k.endsWith("[]")) {
-      const key = k.slice(0, -2);
-      const cur = (out[key] as unknown[]) ?? [];
-      cur.push(v);
-      out[key] = cur;
+      const parts = k.slice(0, -2).split(".");
+      let cur = out;
+      for (const p of parts.slice(0, -1)) {
+        if (typeof cur[p] !== "object" || cur[p] === null) cur[p] = {};
+        cur = cur[p] as Record<string, unknown>;
+      }
+      const last = parts[parts.length - 1];
+      const arr = Array.isArray(cur[last]) ? (cur[last] as unknown[]) : [];
+      if (v !== "") arr.push(v);
+      cur[last] = arr;
     } else setPath(out, k, v);
   }
   return out;

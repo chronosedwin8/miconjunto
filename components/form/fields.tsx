@@ -155,6 +155,7 @@ export function CheckboxField({ name, label, hint, className, defaultChecked, ..
   return (
     <div className={cn("space-y-1", className)}>
       <label htmlFor={id} className="flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+        <input type="hidden" name={name} value="false" />
         <input id={id} type="checkbox" name={name} value="true" defaultChecked={defaultChecked} className="mt-0.5 size-5 accent-[var(--brand)]" {...props} />
         <span className="text-sm">
           <span className="font-medium">{label}</span>
