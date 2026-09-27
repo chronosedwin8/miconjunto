@@ -136,3 +136,145 @@ export function desglosarIva(totalConIva: number, tarifaPct: number) {
   const base = round(totalConIva / (1 + tarifaPct / 100));
   return { base, iva: round(totalConIva - base) };
 }
+
+// ───────────── Extensiones Fase 3 (cartera de administración) ─────────────
+
+/** Suma meses a un periodo YYYY-MM. */
+export function sumarMeses(periodo: string, n: number) {
+  const [y, m] = periodo.split("-").map(Number);
+  const t = y * 12 + (m - 1) + n;
+  return `${Math.floor(t / 12)}-${String((t % 12) + 1).padStart(2, "0")}`;
+}
+
+/** ¿Es un periodo válido YYYY-MM? */
+export function periodoValido(p: string) {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(p);
+}
+
+const dd = (n: number) => String(Math.min(28, Math.max(1, Math.round(n)))).padStart(2, "0");
+
+/**
+ * Fechas de una cuota mensual en hora de Bogotá (UTC−5, sin horario de verano):
+ * emisión el día de generación (00:00), vencimiento el día configurado (00:00: la mora corre desde el día siguiente)
+ * y pronto pago hasta las 23:59:59 del día límite.
+ */
+export function fechasPeriodo(periodo: string, cfg: { diaGeneracion: number; diaVencimiento: number; diaProntoPago: number }) {
+  const at = (dia: number, hora = "00:00:00") => new Date(`${periodo}-${dd(dia)}T${hora}-05:00`);
+  return {
+    emision: at(cfg.diaGeneracion),
+    vencimiento: at(cfg.diaVencimiento),
+    prontoPago: cfg.diaProntoPago > 0 ? at(cfg.diaProntoPago, "23:59:59") : null,
+  };
+}
+
+/** Fecha (00:00 Bogotá) del día `dia` de un periodo. */
+export function fechaDelPeriodo(periodo: string, dia: number) {
+  return new Date(`${periodo}-${dd(dia)}T00:00:00-05:00`);
+}
+
+export type TramoTasa = { desde: Date; tasaMensual: number };
+
+/**
+ * Interés de mora simple entre dos fechas aplicando la tasa vigente en cada tramo (la tasa cambia mes a mes).
+ * `tasas` puede venir en cualquier orden; para cada día se usa la última tasa con `desde` <= día.
+ * Días completos (base 30). Sin capitalización: `capital` debe excluir intereses (prohibido el anatocismo).
+ */
+export function interesPorTramos(capital: number, desde: Date, hasta: Date, tasas: TramoTasa[], tasaDefecto = 0) {
+  if (capital <= 0 || hasta.getTime() <= desde.getTime()) return 0;
+  const ord = [...tasas].sort((a, b) => a.desde.getTime() - b.desde.getTime());
+  const DAY = 86_400_000;
+  const totalDias = Math.floor((hasta.getTime() - desde.getTime()) / DAY);
+  if (totalDias <= 0) return 0;
+  let acumulado = 0;
+  let i = 0;
+  while (i < totalDias) {
+    const dia = new Date(desde.getTime() + i * DAY);
+    const vig = [...ord].reverse().find((t) => t.desde.getTime() <= dia.getTime());
+    const tasa = vig?.tasaMensual ?? tasaDefecto;
+    // Siguiente cambio de tasa (para agrupar días con la misma tasa).
+    const next = ord.find((t) => t.desde.getTime() > dia.getTime());
+    const hastaTramo = next ? Math.min(totalDias, Math.ceil((next.desde.getTime() - desde.getTime()) / DAY)) : totalDias;
+    const dias = Math.max(1, hastaTramo - i);
+    acumulado += (capital * (tasa / 100) * dias) / 30;
+    i += dias;
+  }
+  return round(acumulado);
+}
+
+/** Capital sobre el que se causan intereses: excluye cuotas de interés (sin anatocismo). */
+export function capitalParaMora(cuotas: { saldo: number; tipoConcepto: string }[]) {
+  return round(cuotas.filter((c) => c.tipoConcepto !== "INTERES_MORA").reduce((a, c) => a + Math.max(0, c.saldo), 0));
+}
+
+/** Valida la tasa de mora frente al límite legal (1,5 × IBC). Devuelve el exceso en puntos (0 si es válida). */
+export function excesoTasaMora(tasaEA: number, ibcEA: number) {
+  const max = tasaMaximaMora(ibcEA);
+  return tasaEA > max + 1e-9 ? Number((tasaEA - max).toFixed(4)) : 0;
+}
+
+/** Tasa efectiva anual equivalente a una mensual. */
+export function tasaEADesdeMensual(mensualPct: number) {
+  return (Math.pow(1 + mensualPct / 100, 12) - 1) * 100;
+}
+
+/** Plan de cuotas de un acuerdo de pago: N cuotas mensuales el día `diaPago`, empezando en `primerPeriodo`. */
+export function planAcuerdo(saldo: number, n: number, primerPeriodo: string, diaPago: number) {
+  return fraccionar(round(saldo), n).map((valor, i) => {
+    const periodo = sumarMeses(primerPeriodo, i);
+    return { numero: i + 1, periodo, valor, vencimiento: fechaDelPeriodo(periodo, diaPago) };
+  });
+}
+
+// ── Valor en letras (recibos de caja) ──
+const UNIDADES = ["", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte", "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"];
+const DECENAS = ["", "", "", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"];
+const CENTENAS = ["", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"];
+
+function menorMil(n: number): string {
+  if (n === 0) return "";
+  if (n === 100) return "cien";
+  const c = Math.floor(n / 100);
+  const r = n % 100;
+  let s = CENTENAS[c];
+  if (r > 0) {
+    let t: string;
+    if (r < 30) t = UNIDADES[r];
+    else {
+      const d = Math.floor(r / 10);
+      const u = r % 10;
+      t = DECENAS[d] + (u ? ` y ${UNIDADES[u]}` : "");
+    }
+    s = s ? `${s} ${t}` : t;
+  }
+  return s;
+}
+
+/** 1.234.567 → "un millón doscientos treinta y cuatro mil quinientos sesenta y siete pesos m/cte." */
+export function valorEnLetras(valor: number) {
+  let n = Math.round(Math.abs(valor));
+  if (n === 0) return "cero pesos m/cte.";
+  const partes: string[] = [];
+  const millones = Math.floor(n / 1_000_000);
+  n %= 1_000_000;
+  const miles = Math.floor(n / 1000);
+  const resto = n % 1000;
+  if (millones > 0) {
+    if (millones === 1) partes.push("un millón");
+    else partes.push(`${apocopar(valorMiles(millones))} millones`);
+  }
+  if (miles > 0) partes.push(miles === 1 ? "mil" : `${apocopar(menorMil(miles))} mil`);
+  if (resto > 0) partes.push(menorMil(resto));
+  const texto = partes.join(" ").replace(/\s+/g, " ").trim();
+  const de = resto === 0 && miles === 0 && millones > 0 ? " de" : "";
+  return `${texto}${de} pesos m/cte.`;
+}
+
+function valorMiles(n: number) {
+  const miles = Math.floor(n / 1000);
+  const resto = n % 1000;
+  return [miles > 0 ? (miles === 1 ? "mil" : `${apocopar(menorMil(miles))} mil`) : "", menorMil(resto)].filter(Boolean).join(" ");
+}
+
+function apocopar(s: string) {
+  return s.replace(/veintiuno$/, "veintiún").replace(/uno$/, "un");
+}

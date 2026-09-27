@@ -128,7 +128,7 @@ export type SaldoUnidad = {
 export async function saldoUnidad(ctx: Pick<Ctx, "db">, unidadId: string, hoy = new Date()): Promise<SaldoUnidad> {
   const [cuotas, pagos, aplicado] = await Promise.all([
     ctx.db.cuota.findMany({
-      where: { unidadId, estado: { in: ["PENDIENTE", "PARCIAL", "EN_ACUERDO"] } },
+      where: { unidadId, estado: { in: ["PENDIENTE", "PARCIAL", "EN_ACUERDO"] }, saldo: { gt: 0 } }, // EN_ACUERDO con saldo 0 = trasladada a un acuerdo
       include: { concepto: true },
       orderBy: { fechaVencimiento: "asc" },
     }),
