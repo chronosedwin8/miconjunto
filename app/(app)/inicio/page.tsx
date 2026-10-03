@@ -34,6 +34,7 @@ import { resumenConvivenciaGestion, resumenConvivenciaResidente } from "@/lib/co
 import * as gobiernoInicio from "@/lib/asambleas/inicio";
 import { resumenTicketsAdmin, resumenTicketsMantenimiento, resumenTicketsResidente } from "@/lib/tickets/inicio";
 import { resumenObrasGestion, resumenObrasResidente } from "@/lib/obras/inicio";
+import { resumenObjetosGestion } from "@/lib/objetos-perdidos/service";
 
 export const metadata = { title: "Inicio" };
 
@@ -113,12 +114,12 @@ async function InicioResidente({ ctx }: { ctx: Ctx }) {
   const verCuenta = can(ctx, "cartera.ver");
   const [pago, porteria, reservas, tickets, muro, gobierno, hogar, convivencia, obras] = await Promise.all([
     verCuenta ? safe(() => resumenPagoResidente(ctx)) : null,
-    safe(() => porteriaInicio.resumenResidente(ctx)),
-    safe(() => reservasInicio.resumenResidente(ctx)),
+    can(ctx, ["visitantes.autorizar", "paqueteria.ver"]) ? safe(() => porteriaInicio.resumenResidente(ctx)) : null,
+    can(ctx, "reservas.ver") ? safe(() => reservasInicio.resumenResidente(ctx)) : null,
     can(ctx, "tickets.ver") ? safe(() => resumenTicketsResidente(ctx)) : null,
-    safe(() => ultimasPublicaciones(ctx, 3)),
-    safe(() => gobiernoInicio.resumenResidente(ctx)),
-    safe(() => residentesInicio.resumenResidente(ctx)),
+    can(ctx, "comunicaciones.ver") ? safe(() => ultimasPublicaciones(ctx, 3)) : null,
+    can(ctx, ["votaciones.ver", "encuestas.ver", "asambleas.ver"]) ? safe(() => gobiernoInicio.resumenResidente(ctx)) : null,
+    can(ctx, "residentes.ver") ? safe(() => residentesInicio.resumenResidente(ctx)) : null,
     can(ctx, "convivencia.ver") ? safe(() => resumenConvivenciaResidente(ctx)) : null,
     can(ctx, "obras.ver") ? safe(() => resumenObrasResidente(ctx)) : null,
   ]);
@@ -158,7 +159,7 @@ async function InicioResidente({ ctx }: { ctx: Ctx }) {
         {can(ctx, "reservas.crear") && <Acceso href="/reservas" icon={CalendarCheck} texto="Reservar" />}
         {can(ctx, "tickets.crear") && <Acceso href="/tickets/nuevo?tipo=PETICION" icon={LifeBuoy} texto="PQRS" />}
         {can(ctx, "paz_y_salvo.solicitar") && <Acceso href="/cuenta#paz-y-salvo" icon={FileCheck2} texto="Paz y salvo" />}
-        <Acceso href="/muro" icon={Megaphone} texto="Muro" />
+        {can(ctx, "comunicaciones.ver") && <Acceso href="/muro" icon={Megaphone} texto="Muro" />}
       </section>
 
       {hogar && (hogar.politicaPendiente || hogar.pasosPendientes > 0 || hogar.soatPorVencer.length > 0 || hogar.vacunasPorVencer.length > 0) && (
@@ -275,7 +276,7 @@ async function InicioResidente({ ctx }: { ctx: Ctx }) {
 
 // ───────────────────────── ADMINISTRACIÓN ─────────────────────────
 async function InicioAdmin({ ctx }: { ctx: Ctx }) {
-  const [cartera, tickets, reservas, porteria, mant, gobierno, residentes, muro, conv, obras] = await Promise.all([
+  const [cartera, tickets, reservas, porteria, mant, gobierno, residentes, muro, conv, obras, objetos] = await Promise.all([
     can(ctx, "cartera.ver_todos") ? safe(() => carteraInicio.resumenAdmin(ctx)) : null,
     can(ctx, "tickets.ver_todos") ? safe(() => resumenTicketsAdmin(ctx)) : null,
     can(ctx, "reservas.ver_todos") ? safe(() => reservasInicio.resumenAdmin(ctx)) : null,
@@ -286,6 +287,7 @@ async function InicioAdmin({ ctx }: { ctx: Ctx }) {
     can(ctx, "comunicaciones.moderar") ? safe(() => resumenModeracion(ctx)) : null,
     can(ctx, "convivencia.ver_todos") ? safe(() => resumenConvivenciaGestion(ctx)) : null,
     can(ctx, "obras.ver_todos") ? safe(() => resumenObrasGestion(ctx)) : null,
+    can(ctx, "objetos.gestionar") ? safe(() => resumenObjetosGestion(ctx)) : null,
   ]);
   const alertas: { key: string; texto: string; href: string }[] = [];
   if (residentes?.pendientesAprobacion) alertas.push({ key: "vin", texto: `${residentes.pendientesAprobacion} vínculo(s) de arrendatarios por aprobar`, href: "/residentes?estado=PENDIENTE_APROBACION" });
@@ -298,6 +300,8 @@ async function InicioAdmin({ ctx }: { ctx: Ctx }) {
   if (conv?.multasPorDecidir) alertas.push({ key: "mul", texto: `${conv.multasPorDecidir} multa(s) por decidir`, href: conv.href });
   if (obras?.obrasPorAprobar || obras?.mudanzasPorAprobar) alertas.push({ key: "obr", texto: `${obras.obrasPorAprobar} obra(s) y ${obras.mudanzasPorAprobar} mudanza(s) por aprobar`, href: obras.href });
   if (gobierno?.poderesPendientes) alertas.push({ key: "pod", texto: `${gobierno.poderesPendientes} poder(es) por revisar`, href: "/asambleas" });
+  if (objetos?.reclamosPendientes) alertas.push({ key: "obj", texto: `${objetos.reclamosPendientes} reclamo(s) de objetos perdidos por verificar`, href: "/objetos-perdidos?vista=atender" });
+  if (objetos?.vencidos) alertas.push({ key: "objv", texto: `${objetos.vencidos} objeto(s) en custodia superaron el plazo: donar o cerrar`, href: "/objetos-perdidos?vista=atender" });
   if (mant?.gastosPendientes) alertas.push({ key: "gas", texto: `${mant.gastosPendientes} gasto(s) por aprobar`, href: "/presupuesto" });
 
   return (

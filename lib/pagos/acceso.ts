@@ -16,7 +16,7 @@ export async function cuentasAccesibles(
 ): Promise<CuentaAccesible[]> {
   if (!ctx.personaIds.length) return [];
   const vinculos = await prisma.vinculoUnidad.findMany({
-    where: { conjuntoId: ctx.conjuntoId, personaId: { in: ctx.personaIds }, estado: "ACTIVO", deletedAt: null, unidad: { deletedAt: null } },
+    where: { conjuntoId: ctx.conjuntoId, personaId: { in: ctx.personaIds }, estado: "ACTIVO", accesoPausado: false, deletedAt: null, unidad: { deletedAt: null } },
     select: { unidadId: true, tipo: true, puedeVerCuenta: true, unidad: { select: { codigo: true } } },
   });
   const verPropia = can(ctx, ["cartera.ver", "pagos.pagar"]);

@@ -77,6 +77,14 @@ export const configSchema = z.object({
     })
     .prefault({}),
   ia: z.object({ activo: z.boolean().default(false) }).prefault({}),
+  objetosPerdidos: z
+    .object({
+      /** Días que un objeto encontrado puede estar en custodia antes de pedir disposición (donar o cerrar). */
+      diasCustodia: z.number().int().min(7).max(365).default(60),
+      /** Días tras los que se cierra automáticamente un reporte de pérdida. */
+      diasPerdido: z.number().int().min(15).max(365).default(90),
+    })
+    .prefault({}),
   moduloEmergencia: z.object({ mostrarBotonPanico: z.boolean().default(true) }).prefault({}),
 });
 

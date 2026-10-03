@@ -6,7 +6,6 @@ import { action } from "@/lib/action";
 import { zs } from "@/lib/validation";
 import { guardarPublicacion } from "@/lib/muro/service";
 import { SUBCATEGORIAS_CLASIFICADO } from "@/lib/muro/contenido";
-import { cerrarObjeto, marcarDevuelto, reportarObjeto } from "@/lib/clasificados/service";
 
 const done = <T>(r: T) => {
   revalidatePath("/clasificados", "layout");
@@ -42,23 +41,3 @@ export const guardarClasificadoAction = action({ perm: ["clasificados.publicar",
   });
   return done({ id: p.id, estado: p.estado });
 });
-
-const objetoSchema = z.object({
-  tipo: z.enum(["PERDIDO", "ENCONTRADO"]),
-  descripcion: zs.text(5, 500),
-  lugar: zs.optText(120),
-  fecha: zs.optDate(),
-  fotoUrl: zs.optText(500),
-  contacto: zs.optText(120),
-});
-
-export const reportarObjetoAction = action({ perm: "clasificados.publicar", schema: objetoSchema }, async (input, ctx) => {
-  const o = await reportarObjeto(ctx, input);
-  return done({ id: o.id });
-});
-
-export const devolverObjetoAction = action({ perm: "clasificados.ver", schema: z.object({ id: zs.id(), entregadoA: zs.text(2, 120) }) }, async ({ id, entregadoA }, ctx) =>
-  done(await marcarDevuelto(ctx, id, entregadoA)),
-);
-
-export const cerrarObjetoAction = action({ perm: "clasificados.ver", schema: z.object({ id: zs.id() }) }, async ({ id }, ctx) => done(await cerrarObjeto(ctx, id)));

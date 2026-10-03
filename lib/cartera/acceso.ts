@@ -9,7 +9,7 @@ export async function puedeVerCuentaUnidad(ctx: Ctx, unidadId: string, permTodos
   if (can(ctx, permTodos)) return true;
   if (!can(ctx, permPropio)) return false;
   if (ctx.unidadesPropias.includes(unidadId)) return true;
-  const v = await ctx.db.vinculoUnidad.count({ where: { unidadId, personaId: { in: ctx.personaIds }, estado: "ACTIVO", puedeVerCuenta: true } });
+  const v = await ctx.db.vinculoUnidad.count({ where: { unidadId, personaId: { in: ctx.personaIds }, estado: "ACTIVO", accesoPausado: false, puedeVerCuenta: true } });
   return v > 0;
 }
 

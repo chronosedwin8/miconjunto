@@ -28,26 +28,3 @@ export function CamposClasificado({ inicial }: { inicial?: ClasificadoInicial })
     </>
   );
 }
-
-export function CamposObjeto() {
-  return (
-    <>
-      <ChoiceCards
-        name="tipo"
-        defaultValue="PERDIDO"
-        options={[
-          { value: "PERDIDO", label: "Perdí algo", description: "Pide ayuda a los vecinos" },
-          { value: "ENCONTRADO", label: "Encontré algo", description: "Ayuda a devolverlo" },
-        ]}
-      />
-      <TextAreaField name="descripcion" label="¿Qué es?" required maxLength={500} placeholder="Ej.: Llaves con llavero rojo, gato gris con collar azul…" rows={2} />
-      <FormGrid>
-        <TextField name="lugar" label="Lugar" maxLength={120} placeholder="Parque infantil, sótano 1…" />
-        <TextField name="fecha" label="Fecha" type="date" />
-      </FormGrid>
-      <FileField name="fotoUrl" label="Foto (opcional)" folder="perdidos" />
-      <TextField name="contacto" label="Contacto (opcional)" maxLength={120} placeholder="Portería, WhatsApp…" />
-    </>
-  );
-}
-

@@ -445,8 +445,32 @@ enum TipoObjetoPerdido {
 
 enum EstadoObjetoPerdido {
   ABIERTO
+  EN_CUSTODIA
+  RECLAMADO
   DEVUELTO
   CERRADO
+  DONADO
+}
+
+enum CategoriaObjeto {
+  LLAVES
+  DOCUMENTOS
+  BILLETERA
+  CELULAR
+  ELECTRONICO
+  ROPA
+  JUGUETE
+  MASCOTA
+  BICICLETA
+  JOYA
+  GAFAS
+  OTRO
+}
+
+enum EstadoReclamoObjeto {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
 }
 
 enum TipoTicket {
@@ -1135,23 +1159,26 @@ model TokenVerificacion {
 }
 
 model Invitacion {
-  id            String           @id @default(cuid())
-  conjuntoId    String
-  email         String
-  telefono      String?
-  nombre        String?
-  unidadId      String?
-  personaId     String?
-  rolClave      String
-  tipoVinculo   TipoVinculo?
-  invitadoPorId String?
-  tokenHash     String           @unique
-  estado        EstadoInvitacion @default(PENDIENTE)
-  expira        DateTime
-  aceptadaEn    DateTime?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  deletedAt     DateTime?
+  id               String           @id @default(cuid())
+  conjuntoId       String
+  email            String
+  telefono         String?
+  nombre           String?
+  unidadId         String?
+  personaId        String?
+  rolClave         String
+  tipoVinculo      TipoVinculo?
+  invitadoPorId    String?
+  /// Acceso derivado: vínculo del titular que invita y capacidades que otorga.
+  derivadoDeId     String?
+  capacidadesHogar String[]         @default([])
+  tokenHash        String           @unique
+  estado           EstadoInvitacion @default(PENDIENTE)
+  expira           DateTime
+  aceptadaEn       DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
 
   @@index([conjuntoId])
 }
@@ -1263,29 +1290,38 @@ model Persona {
 }
 
 model VinculoUnidad {
-  id                  String        @id @default(cuid())
+  id                  String          @id @default(cuid())
   conjuntoId          String
-  conjunto            Conjunto      @relation(fields: [conjuntoId], references: [id])
+  conjunto            Conjunto        @relation(fields: [conjuntoId], references: [id])
   personaId           String
-  persona             Persona       @relation(fields: [personaId], references: [id])
+  persona             Persona         @relation(fields: [personaId], references: [id])
   unidadId            String
-  unidad              Unidad        @relation(fields: [unidadId], references: [id])
+  unidad              Unidad          @relation(fields: [unidadId], references: [id])
   tipo                TipoVinculo
-  porcentajePropiedad Decimal?      @db.Decimal(5, 2)
-  fechaInicio         DateTime      @default(now())
+  porcentajePropiedad Decimal?        @db.Decimal(5, 2)
+  fechaInicio         DateTime        @default(now())
   fechaFin            DateTime?
-  principal           Boolean       @default(false)
+  principal           Boolean         @default(false)
   horarioPermitido    Json? // { dias:[1,2,3], desde:"07:00", hasta:"17:00" }
-  estado              EstadoVinculo @default(ACTIVO)
-  puedeVerCuenta      Boolean       @default(false)
+  estado              EstadoVinculo   @default(ACTIVO)
+  puedeVerCuenta      Boolean         @default(false)
   aprobadoPorId       String?
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  /// Acceso derivado: vínculo del titular que otorgó este acceso (si el titular sale, este acceso termina).
+  derivadoDeId        String?
+  derivadoDe          VinculoUnidad?  @relation("AccesoDerivado", fields: [derivadoDeId], references: [id])
+  derivados           VinculoUnidad[] @relation("AccesoDerivado")
+  /// Capacidades que el titular le dio en la app (ver lib/hogar/capacidades.ts). Vacío = sin restricción adicional.
+  capacidadesHogar    String[]        @default([])
+  /// El titular pausó temporalmente el acceso a la app (el vínculo físico sigue activo).
+  accesoPausado       Boolean         @default(false)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
   deletedAt           DateTime?
 
   @@index([conjuntoId])
   @@index([unidadId])
   @@index([personaId])
+  @@index([derivadoDeId])
 }
 
 model Vehiculo {
@@ -2319,22 +2355,70 @@ model EventoCalendario {
 }
 
 model ObjetoPerdido {
-  id             String              @id @default(cuid())
-  conjuntoId     String
-  tipo           TipoObjetoPerdido
-  descripcion    String
-  lugar          String?
-  fecha          DateTime            @default(now())
-  fotoUrl        String?
-  reportadoPorId String?
-  contacto       String?
-  estado         EstadoObjetoPerdido @default(ABIERTO)
-  entregadoA     String?
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  deletedAt      DateTime?
+  id                 String              @id @default(cuid())
+  conjuntoId         String
+  /// Consecutivo legible (OP-2026-0001).
+  codigo             String?
+  tipo               TipoObjetoPerdido
+  categoria          CategoriaObjeto     @default(OTRO)
+  titulo             String?
+  descripcion        String
+  /// Rasgos que solo el dueño conoce (no se publican; sirven para verificar al reclamar).
+  rasgosPrivados     String?
+  color              String?
+  marca              String?
+  lugar              String?
+  zonaId             String?
+  fecha              DateTime            @default(now())
+  fotoUrl            String?
+  fotos              String[]            @default([])
+  reportadoPorId     String?
+  unidadId           String?
+  contacto           String?
+  recompensa         String?
+  estado             EstadoObjetoPerdido @default(ABIERTO)
+  /// Dónde está guardado el objeto encontrado (portería, administración, casillero…).
+  custodia           String?
+  recibidoPorId      String?
+  recibidoEn         DateTime?
+  entregadoA         String?
+  entregadoDocumento String?
+  entregadoPorId     String?
+  entregadoEn        DateTime?
+  firmaUrl           String?
+  /// Reporte de la contraparte con el que se cerró (perdido ↔ encontrado).
+  coincideConId      String?
+  venceEn            DateTime?
+  disposicion        String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
+
+  reclamos ReclamoObjeto[]
 
   @@index([conjuntoId])
+  @@index([conjuntoId, estado])
+}
+
+/// Solicitud de un residente que dice ser dueño de un objeto encontrado.
+model ReclamoObjeto {
+  id            String              @id @default(cuid())
+  conjuntoId    String
+  objetoId      String
+  objeto        ObjetoPerdido       @relation(fields: [objetoId], references: [id])
+  usuarioId     String
+  unidadId      String?
+  descripcion   String
+  estado        EstadoReclamoObjeto @default(PENDIENTE)
+  respuesta     String?
+  resueltoPorId String?
+  resueltoEn    DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  deletedAt     DateTime?
+
+  @@index([conjuntoId])
+  @@index([objetoId])
 }
 
 // ─────────────────────────────── PQRS Y CONVIVENCIA ───────────────────────────────

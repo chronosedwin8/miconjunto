@@ -54,6 +54,11 @@ export default async function UnidadPage({ params }: { params: Promise<{ id: str
               Estado de cuenta
             </Button>
           )}
+          {can(ctx, "residentes.ver_todos") && (
+            <Button variant="outline" render={<Link href={`/mi-hogar/accesos?u=${u.id}`} />}>
+              Accesos a la app
+            </Button>
+          )}
           {can(ctx, "informes.historial_unidad") && (
             <Button variant="outline" render={<Link href={`/informes/unidad/${u.id}`} />}>
               Historial
@@ -87,6 +92,7 @@ export default async function UnidadPage({ params }: { params: Promise<{ id: str
                   <p className="text-xs text-muted-foreground">
                     {label(v.tipo)}
                     {v.principal && " · principal"}
+                    {(v.derivadoDeId || v.capacidadesHogar.length > 0) && (v.accesoPausado ? " · acceso derivado en pausa" : " · acceso derivado")}
                     {edad(v.persona.fechaNacimiento) !== null && ` · ${edad(v.persona.fechaNacimiento)} años`}
                     {verTel && v.persona.telefono && ` · ${v.persona.telefono}`}
                     {verSalud && v.persona.movilidadReducida && " · ♿ movilidad reducida"}

@@ -17,8 +17,11 @@ const CARAS = ["Muy mal", "Mal", "Regular", "Bien", "Muy bien"];
 export function ResponderForm({ encuestaId, preguntas }: { encuestaId: string; preguntas: Pregunta[] }) {
   const [r, setR] = useState<Record<string, string | string[]>>({});
   const [pending, start] = useTransition();
+  const [marcar, setMarcar] = useState(false);
   const router = useRouter();
-  const faltan = preguntas.filter((p) => p.requerida && (!r[p.id] || (Array.isArray(r[p.id]) && !(r[p.id] as string[]).length) || r[p.id] === ""));
+  const vacia = (p: Pregunta) => !r[p.id] || (Array.isArray(r[p.id]) && !(r[p.id] as string[]).length) || (typeof r[p.id] === "string" && !(r[p.id] as string).trim());
+  const faltan = preguntas.filter((p) => p.requerida && vacia(p));
+  const respondidas = preguntas.filter((p) => !vacia(p)).length;
 
   const opcionCls = (on: boolean) =>
     cn("flex min-h-12 w-full items-center gap-3 rounded-xl border px-3 py-2 text-left text-base transition-colors", on ? "border-primary bg-primary/10 ring-2 ring-primary/30 font-medium" : "hover:bg-muted");
@@ -28,6 +31,13 @@ export function ResponderForm({ encuestaId, preguntas }: { encuestaId: string; p
       className="space-y-5"
       onSubmit={(e) => {
         e.preventDefault();
+        if (faltan.length) {
+          // Con encuestas largas se lleva a la persona directo a la primera pregunta que le falta.
+          setMarcar(true);
+          toast.error(faltan.length === 1 ? "Te falta 1 pregunta obligatoria." : `Te faltan ${faltan.length} preguntas obligatorias.`);
+          document.getElementById(`p-${faltan[0].id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
         start(async () => {
           const res = await responderEncuestaAction({ encuestaId, r });
           if (res.ok) {
@@ -38,7 +48,7 @@ export function ResponderForm({ encuestaId, preguntas }: { encuestaId: string; p
       }}
     >
       {preguntas.map((p, i) => (
-        <fieldset key={p.id} className="space-y-2">
+        <fieldset key={p.id} id={`p-${p.id}`} className={cn("min-w-0 scroll-mt-20 space-y-2", marcar && faltan.includes(p) && "rounded-xl p-2 ring-2 ring-destructive/40")}>
           <legend className="mb-2 font-semibold">
             {preguntas.length > 1 ? `${i + 1}. ` : ""}
             {p.texto}
@@ -95,9 +105,19 @@ export function ResponderForm({ encuestaId, preguntas }: { encuestaId: string; p
           {p.tipo === "TEXTO" && <Textarea aria-label={p.texto} maxLength={1000} value={(r[p.id] as string) ?? ""} onChange={(e) => setR((x) => ({ ...x, [p.id]: e.target.value }))} placeholder="Escribe tu respuesta" />}
         </fieldset>
       ))}
-      <Button type="submit" size="lg" className="w-full" disabled={pending || faltan.length > 0}>
-        {pending ? <Loader2 className="animate-spin" /> : <Send />} Enviar respuesta
-      </Button>
+      <div className={cn("space-y-2", preguntas.length > 3 && "sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-10 rounded-xl border bg-background/95 p-2 shadow-lg backdrop-blur lg:bottom-3")}>
+        {preguntas.length > 3 && (
+          <div className="flex items-center gap-2 px-1 text-xs text-muted-foreground">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuemin={0} aria-valuemax={preguntas.length} aria-valuenow={respondidas} aria-label="Preguntas respondidas">
+              <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${(respondidas / preguntas.length) * 100}%` }} />
+            </div>
+            {respondidas} de {preguntas.length}
+          </div>
+        )}
+        <Button type="submit" size="lg" className="w-full" disabled={pending}>
+          {pending ? <Loader2 className="animate-spin" /> : <Send />} Enviar respuesta
+        </Button>
+      </div>
     </form>
   );
 }

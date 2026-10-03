@@ -18,6 +18,9 @@ export type InvitarInput = {
   unidadId?: string | null;
   tipoVinculo?: TipoVinculo | null;
   personaId?: string | null;
+  /** Acceso derivado: vínculo del titular que otorga el acceso y capacidades del hogar (lib/hogar). */
+  derivadoDeId?: string | null;
+  capacidadesHogar?: string[];
 };
 
 const ROLES_QUE_PUEDE_INVITAR_RESIDENTE = new Set(["RESIDENTE", "CONVIVIENTE", "PROPIETARIO"]);
@@ -51,6 +54,8 @@ export async function invitarUsuario(ctx: Ctx, input: InvitarInput) {
       personaId: input.personaId,
       rolClave: rol.clave,
       tipoVinculo: input.tipoVinculo,
+      derivadoDeId: input.derivadoDeId ?? null,
+      capacidadesHogar: input.capacidadesHogar ?? [],
       invitadoPorId: ctx.userId === "sistema" ? null : ctx.userId,
       tokenHash: sha256(token),
       expira: new Date(Date.now() + 14 * 86400000),
@@ -102,6 +107,11 @@ export async function aceptarInvitacion(
   if (!data || !data.conjunto || !data.rol) throw new AppError("La invitación no es válida o ya venció.");
   if (!input.aceptaPolitica) throw new AppError("Debes aceptar la política de tratamiento de datos para continuar.", 400, { aceptaPolitica: "Obligatorio" });
   const { inv, rol } = data;
+  const derivada = !!inv.derivadoDeId || inv.capacidadesHogar.length > 0;
+  if (inv.derivadoDeId) {
+    const titular = await prisma.vinculoUnidad.findFirst({ where: { id: inv.derivadoDeId, estado: "ACTIVO", deletedAt: null } });
+    if (!titular) throw new AppError("Quien te invitó ya no es titular de la unidad, así que esta invitación no es válida. Pídele al titular actual una nueva.");
+  }
   let usuario = await prisma.usuario.findUnique({ where: { email: inv.email } });
   if (!usuario) {
     const issue = passwordIssues(input.password ?? "");
@@ -122,6 +132,11 @@ export async function aceptarInvitacion(
   const m = await prisma.membresiaConjunto.findFirst({ where: { usuarioId: usuario.id, conjuntoId: inv.conjuntoId } });
   if (!m) await prisma.membresiaConjunto.create({ data: { usuarioId: usuario.id, conjuntoId: inv.conjuntoId, rolId: rol.id } });
   else if (m.deletedAt || m.estado !== "ACTIVA") await prisma.membresiaConjunto.update({ where: { id: m.id }, data: { deletedAt: null, estado: "ACTIVA", rolId: rol.id } });
+  else if (derivada) {
+    // Un conviviente que recibe acceso derivado pasa al rol de la invitación: sus capacidades lo limitan igual.
+    const actual = await prisma.rol.findUnique({ where: { id: m.rolId } });
+    if (actual && (actual.basadoEnClave ?? actual.clave) === "CONVIVIENTE") await prisma.membresiaConjunto.update({ where: { id: m.id }, data: { rolId: rol.id } });
+  }
 
   let vinculoPendiente = false;
   if (inv.unidadId) {
@@ -151,11 +166,17 @@ export async function aceptarInvitacion(
       ? !!(await prisma.membresiaConjunto.findFirst({ where: { usuarioId: inv.invitadoPorId, conjuntoId: inv.conjuntoId, rol: { basadoEnClave: { in: ["PROPIETARIO", "RESIDENTE", "CONVIVIENTE"] } } } }))
       : false;
     vinculoPendiente = (tipo === "ARRENDATARIO" || tipo === "COPROPIETARIO") && invitadoPorResidente;
-    const existe = await prisma.vinculoUnidad.findFirst({ where: { personaId: persona.id, unidadId: inv.unidadId, deletedAt: null } });
+    const derivacion = derivada
+      ? { derivadoDeId: inv.derivadoDeId, capacidadesHogar: inv.capacidadesHogar, puedeVerCuenta: inv.capacidadesHogar.includes("cuenta"), accesoPausado: false }
+      : {};
+    const existe = await prisma.vinculoUnidad.findFirst({ where: { personaId: persona.id, unidadId: inv.unidadId, deletedAt: null, estado: { in: ["ACTIVO", "PENDIENTE_APROBACION"] } } });
     if (!existe) {
       await prisma.vinculoUnidad.create({
-        data: { conjuntoId: inv.conjuntoId, personaId: persona.id, unidadId: inv.unidadId, tipo, estado: vinculoPendiente ? "PENDIENTE_APROBACION" : "ACTIVO" },
+        data: { conjuntoId: inv.conjuntoId, personaId: persona.id, unidadId: inv.unidadId, tipo, estado: vinculoPendiente ? "PENDIENTE_APROBACION" : "ACTIVO", ...derivacion },
       });
+    } else if (derivada && !["PROPIETARIO", "COPROPIETARIO", "ARRENDATARIO"].includes(existe.tipo)) {
+      // Ya vivía en la unidad (registrado sin cuenta): su vínculo pasa a ser un acceso derivado.
+      await prisma.vinculoUnidad.update({ where: { id: existe.id }, data: { ...derivacion, tipo } });
     }
     if (vinculoPendiente) {
       const admins = await usuariosConPermiso(inv.conjuntoId, ["residentes.aprobar"]);

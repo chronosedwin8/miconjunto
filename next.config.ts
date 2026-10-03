@@ -20,6 +20,8 @@ const csp = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  // Carpeta de compilación configurable: permite un servidor de desarrollo paralelo sin pisar el build de producción.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   reactStrictMode: true,
   poweredByHeader: false,
   devIndicators: false,

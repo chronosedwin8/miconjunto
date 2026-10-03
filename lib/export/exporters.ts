@@ -19,3 +19,4 @@ import "@/lib/tickets/export";
 import "@/lib/convivencia/export";
 import "@/lib/obras/export";
 import "@/lib/documentos/export";
+import "@/lib/objetos-perdidos/export";

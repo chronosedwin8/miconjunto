@@ -8,6 +8,7 @@ import { notify } from "@/lib/notificaciones";
 import { can } from "@/lib/permisos";
 import { prisma } from "@/lib/db";
 import { definicionEfectiva, resolverUsuarios, usuarioEnSegmento, type SegmentoDef } from "@/lib/segmentos";
+import { MAX_OPCIONES, MAX_PREGUNTAS } from "./limites";
 
 /**
  * Encuestas rápidas: preguntas de opción única, múltiple, escala 1–5 y texto; audiencia por segmento
@@ -68,7 +69,7 @@ async function segmentoParaAudiencia(ctx: Ctx, input: Pick<CrearEncuestaInput, "
 
 function validarPreguntas(preguntas: PreguntaInput[]) {
   if (!preguntas.length) throw new AppError("Agrega al menos una pregunta.");
-  if (preguntas.length > 30) throw new AppError("Máximo 30 preguntas por encuesta.");
+  if (preguntas.length > MAX_PREGUNTAS) throw new AppError(`Máximo ${MAX_PREGUNTAS} preguntas por encuesta.`);
   return preguntas.map((p, i) => {
     const texto = p.texto.trim();
     if (!texto) throw new AppError(`La pregunta ${i + 1} no tiene texto.`);
@@ -76,6 +77,7 @@ function validarPreguntas(preguntas: PreguntaInput[]) {
     if (p.tipo === "UNICA" || p.tipo === "MULTIPLE") {
       opciones = [...new Set((p.opciones ?? []).map((o) => o.trim()).filter(Boolean))];
       if (opciones.length < 2) throw new AppError(`La pregunta ${i + 1} necesita al menos dos opciones.`);
+      if (opciones.length > MAX_OPCIONES) throw new AppError(`La pregunta ${i + 1} tiene más de ${MAX_OPCIONES} opciones.`);
     }
     if (p.tipo === "ESCALA") opciones = ["1", "2", "3", "4", "5"];
     return { orden: i + 1, tipo: p.tipo, texto, opciones, requerida: p.requerida ?? true };

@@ -8,12 +8,11 @@ export default async function ClasificadosLayout({ children }: { children: React
   const pendientes = can(ctx, ["clasificados.moderar", "comunicaciones.moderar"]) ? await ctx.db.publicacion.count({ where: { estado: "PENDIENTE_MODERACION" } }) : null;
   const tabs = [
     { href: "/clasificados", label: "Clasificados" },
-    { href: "/clasificados/perdidos", label: "Perdidos y encontrados" },
     ...(pendientes !== null ? [{ href: "/clasificados/moderacion", label: "Moderación", count: pendientes }] : []),
   ];
   return (
     <>
-      <PageHeader titulo="Clasificados y perdidos" descripcion="Marketplace vecinal moderado y objetos perdidos o encontrados" />
+      <PageHeader titulo="Clasificados" descripcion="Marketplace vecinal moderado" />
       <TabsNav tabs={tabs} />
       {children}
     </>

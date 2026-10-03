@@ -10,7 +10,7 @@ import { prisma, daysAgo, type SeedState } from "./util";
 /**
  * Fase 8 — Comunicaciones: segmentos, muro (avisos, noticias, eventos, emergencia pasada, clasificados
  * aprobados y pendientes, perdido/encontrado) con reacciones, comentarios y lecturas; campañas de correo
- * con métricas; carpetas y documentos con versiones y acuses; calendario; objetos perdidos; directorio opt-in.
+ * con métricas; carpetas y documentos con versiones y acuses; calendario; directorio opt-in.
  */
 export async function seedComunicaciones(s: SeedState) {
   const { conjuntoId, rng, now } = s;
@@ -42,7 +42,6 @@ export async function seedComunicaciones(s: SeedState) {
   const evAnt = await prisma.eventoCalendario.findMany({ where: w, select: { titulo: true } });
   await prisma.bloqueoZona.deleteMany({ where: { ...w, motivo: { in: evAnt.map((e) => e.titulo) } } });
   await prisma.eventoCalendario.deleteMany({ where: w });
-  await prisma.objetoPerdido.deleteMany({ where: w });
 
   // ── Vecinos con cuenta en la app (para reacciones, lecturas y acuses realistas) ──
   const vinculos = await prisma.vinculoUnidad.findMany({
@@ -472,20 +471,7 @@ export async function seedComunicaciones(s: SeedState) {
     }
   }
 
-  // ── Objetos perdidos y encontrados ──
-  const objetos = [
-    { tipo: "ENCONTRADO" as const, descripcion: "Gato gris con collar azul", lugar: "Parque infantil", d: 1, quien: "porteria", contacto: "Portería Torre 1", foto: imgGato },
-    { tipo: "PERDIDO" as const, descripcion: "Llaves con llavero rojo de Millonarios", lugar: "Gimnasio", d: 2, quien: "residente", contacto: "T2-302" },
-    { tipo: "ENCONTRADO" as const, descripcion: "Chaqueta azul de niño talla 8", lugar: "Salón social", d: 6, quien: "administrador", contacto: "Administración" },
-    { tipo: "PERDIDO" as const, descripcion: "Audífonos inalámbricos blancos en estuche", lugar: "Piscina", d: 4, quien: "propietario", contacto: "Laura, T1-101" },
-    { tipo: "ENCONTRADO" as const, descripcion: "Billetera café con documentos", lugar: "Parqueadero visitantes", d: 15, quien: "porteria", estado: "DEVUELTO" as const, entregadoA: "Carlos Rodríguez (T3-402)" },
-    { tipo: "PERDIDO" as const, descripcion: "Perrita schnauzer llamada Luna", lugar: "Zona BBQ", d: 30, quien: "consejo", estado: "DEVUELTO" as const, entregadoA: "Su dueño, Ricardo (T3-804)" },
-  ];
-  for (const o of objetos) {
-    await prisma.objetoPerdido.create({
-      data: { conjuntoId, tipo: o.tipo, descripcion: o.descripcion, lugar: o.lugar, fecha: dia(-o.d, rng.int(8, 19)), reportadoPorId: U[o.quien] ?? null, contacto: o.contacto ?? null, fotoUrl: "foto" in o ? o.foto : null, estado: o.estado ?? "ABIERTO", entregadoA: o.entregadoA ?? null },
-    });
-  }
+  // Los objetos perdidos y encontrados se siembran en 75-objetos-perdidos.ts.
 
   // ── Directorio opt-in (~20 personas) ──
   await prisma.persona.updateMany({ where: { conjuntoId }, data: { directorioOptIn: false } });

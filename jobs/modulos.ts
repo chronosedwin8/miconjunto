@@ -8,3 +8,4 @@ import "./mantenimiento";
 import "./gobierno";
 import "./tickets";
 import "./comunicaciones";
+import "./objetos-perdidos";

@@ -38,7 +38,8 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/votaciones", label: "Votaciones", icon: "vote", perm: "votaciones.ver" },
       { href: "/asambleas", label: "Asambleas", icon: "landmark", perm: "asambleas.ver" },
       { href: "/directorio", label: "Directorio", icon: "book-user", perm: ["directorio.ver", "directorio.proveedores"] },
-      { href: "/clasificados", label: "Clasificados y perdidos", icon: "store", perm: "clasificados.ver" },
+      { href: "/clasificados", label: "Clasificados", icon: "store", perm: "clasificados.ver" },
+      { href: "/objetos-perdidos", label: "Objetos perdidos", icon: "package-search", perm: "objetos.ver" },
       { href: "/emergencias", label: "Emergencias", icon: "siren", perm: ["emergencias.ver", "emergencias.gestionar"] },
       { href: "/asistente", label: "Asistente IA", icon: "sparkles", perm: "ia.usar", modulo: "ia" },
     ],
@@ -91,13 +92,18 @@ export function bottomNavFor(rolBase: string, perms: Set<string>, esSuperAdmin: 
     ];
   }
   if (["PROPIETARIO", "RESIDENTE", "CONVIVIENTE"].includes(rolBase)) {
-    return [
-      { href: "/inicio", label: "Inicio", icon: "home" },
-      has("cartera.ver") ? { href: "/cuenta", label: "Pagar", icon: "wallet" } : { href: "/muro", label: "Muro", icon: "megaphone" },
-      { href: "/reservas", label: "Reservar", icon: "calendar-check" },
-      { href: "/visitantes", label: "Visitantes", icon: "user-check" },
-      { href: "/mas", label: "Más", icon: "menu" },
+    // Con acceso derivado algunos módulos no están: se muestran solo los que puede usar (máx. 3 + Inicio y Más).
+    const opciones: [string | null, BottomItem][] = [
+      ["cartera.ver", { href: "/cuenta", label: "Pagar", icon: "wallet" }],
+      ["comunicaciones.ver", { href: "/muro", label: "Muro", icon: "megaphone" }],
+      ["reservas.ver", { href: "/reservas", label: "Reservar", icon: "calendar-check" }],
+      ["visitantes.autorizar", { href: "/visitantes", label: "Visitantes", icon: "user-check" }],
+      ["paqueteria.ver", { href: "/paquetes", label: "Paquetes", icon: "package" }],
     ];
+    const visibles = opciones.filter(([p]) => !p || has(p)).map(([, i]) => i);
+    // Si ve la cuenta, "Pagar" reemplaza al muro (como antes).
+    const medio = (visibles[0]?.href === "/cuenta" ? visibles.filter((i) => i.href !== "/muro") : visibles).slice(0, 3);
+    return [{ href: "/inicio", label: "Inicio", icon: "home" }, ...medio, { href: "/mas", label: "Más", icon: "menu" }];
   }
   return [
     { href: "/inicio", label: "Inicio", icon: "home" },

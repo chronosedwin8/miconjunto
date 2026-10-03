@@ -71,6 +71,10 @@ export default async function ParametrosPage() {
             <CheckboxField name="porteria.emergenciaATodos" label="El botón de emergencia de portería notifica a todos los residentes" defaultChecked={c.porteria.emergenciaATodos} />
           </FormGrid>
           <TextAreaField name="porteria.checklistTurno" label="Checklist de entrega de turno (uno por línea)" defaultValue={c.porteria.checklistTurno.join("\n")} />
+          <FormGrid>
+            <TextField name="objetosPerdidos.diasCustodia" label="Objetos encontrados: días en custodia antes de donar o cerrar" type="number" min={7} max={365} defaultValue={c.objetosPerdidos.diasCustodia} />
+            <TextField name="objetosPerdidos.diasPerdido" label="Reportes de pérdida: cierre automático tras (días)" type="number" min={15} max={365} defaultValue={c.objetosPerdidos.diasPerdido} />
+          </FormGrid>
         </ActionForm>
       </Section>
 

@@ -9,7 +9,7 @@ import { comentar, detallePublicacion, feedMuro, guardarPublicacion, moderarCome
 import { guardarCampana } from "@/lib/comunicaciones/correo-masivo";
 import { crearCargo } from "@/lib/cartera/core";
 import { calificarProveedor } from "@/lib/directorio/service";
-import { marcarDevuelto, reportarObjeto } from "@/lib/clasificados/service";
+import { marcarAparecio, reportarObjeto } from "@/lib/objetos-perdidos/service";
 import { makeConjunto, makeUnidades } from "../helpers/db";
 
 let admin: Ctx;
@@ -177,9 +177,9 @@ describe("comunicaciones (integración)", () => {
   });
 
   it("objetos perdidos y calificación de proveedores", async () => {
-    const o = await reportarObjeto(andres, { tipo: "PERDIDO", descripcion: "Llaves con llavero rojo" });
-    await expect(marcarDevuelto(laura, o.id, "Andrés")).rejects.toThrow(/Solo quien/);
-    await marcarDevuelto(andres, o.id, "Andrés, T2");
+    const o = await reportarObjeto(andres, { tipo: "PERDIDO", categoria: "LLAVES", titulo: "Llaves", descripcion: "Llaves con llavero rojo" });
+    await expect(marcarAparecio(laura, o.id)).rejects.toThrow(/Solo quien/);
+    await marcarAparecio(andres, o.id);
     expect((await prisma.objetoPerdido.findUniqueOrThrow({ where: { id: o.id } })).estado).toBe("DEVUELTO");
 
     const prov = await prisma.proveedor.create({ data: { conjuntoId: admin.conjuntoId, nit: "900", razonSocial: "Plomería Ya", categoria: "Plomería", directorioComunitario: true } });

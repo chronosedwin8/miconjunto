@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Car, ClipboardList, LogIn, LogOut, PackageCheck, PackagePlus, Siren, Users } from "lucide-react";
+import { Car, ClipboardList, LogIn, LogOut, PackageCheck, PackagePlus, PackageSearch, Siren, Users } from "lucide-react";
 import { requirePage } from "@/lib/auth/guard";
 import { conjuntoConfig } from "@/lib/conjunto/config";
 import { can } from "@/lib/permisos";
@@ -20,12 +20,14 @@ export default async function PorteriaPage() {
   const ctx = await requirePage("porteria.ver");
   const cfg = conjuntoConfig(ctx);
   const ahora = new Date();
-  const [adentro, solicitudes, resumen, parqs, parqsVis] = await Promise.all([
+  const objetos = can(ctx, "objetos.gestionar");
+  const [adentro, solicitudes, resumen, parqs, parqsVis, enCustodia] = await Promise.all([
     adentroAhora(ctx, ahora),
     solicitudesPanel(ctx, ahora),
     resumenPortero(ctx),
     parqueaderoOptions(ctx),
     ctx.db.parqueadero.findMany({ where: { tipo: "VISITANTES" }, select: { codigo: true, tarifaHora: true, tarifaDia: true } }),
+    objetos ? ctx.db.objetoPerdido.count({ where: { tipo: "ENCONTRADO", estado: { in: ["EN_CUSTODIA", "RECLAMADO"] } } }) : Promise.resolve(0),
   ]);
   const tarifas = new Map(parqsVis.map((p) => [p.codigo, { tarifaHora: toNumber(p.tarifaHora), tarifaDia: toNumber(p.tarifaDia) }]));
   const registrar = can(ctx, "porteria.registrar");
@@ -57,6 +59,7 @@ export default async function PorteriaPage() {
         {registrar && <BigAction href="/porteria/vehiculo" icon={Car} label="Vehículo" hint="Por placa" tono="slate" />}
         {can(ctx, "porteria.novedades") && <BigAction href="/porteria/novedades/nueva" icon={ClipboardList} label="Novedad" tono="amber" />}
         <BigAction href="/porteria/emergencia" icon={Siren} label="Emergencia" tono="red" badge={resumen.alertasActivas || undefined} />
+        {objetos && <BigAction href={`/objetos-perdidos/nuevo?tipo=ENCONTRADO&custodia=${encodeURIComponent("Portería principal")}`} icon={PackageSearch} label="Objeto encontrado" hint={enCustodia ? `${enCustodia} en custodia` : "Recibir y guardar"} tono="outline" />}
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2 text-base">

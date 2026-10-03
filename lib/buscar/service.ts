@@ -4,7 +4,7 @@ import { nombreCompleto, fechaHora } from "@/lib/format";
 
 export type SearchHit = { tipo: string; titulo: string; subtitulo?: string; href: string };
 
-/** Búsqueda global: unidades, personas, placas, tickets, reservas, paquetes, documentos y códigos. */
+/** Búsqueda global: unidades, personas, placas, tickets, reservas, paquetes, documentos, objetos perdidos y códigos. */
 export async function globalSearch(ctx: Ctx, qRaw: string): Promise<SearchHit[]> {
   const q = qRaw.trim();
   if (q.length < 2) return [];
@@ -91,6 +91,23 @@ export async function globalSearch(ctx: Ctx, qRaw: string): Promise<SearchHit[]>
       db.documento
         .findMany({ where: { titulo: ci, publicado: true }, take: 5 })
         .then((rs) => rs.forEach((d) => hits.push({ tipo: "Documento", titulo: d.titulo, subtitulo: d.categoria.toLowerCase(), href: `/documentos?doc=${d.id}` }))),
+    );
+  }
+  if (can(ctx, "objetos.ver")) {
+    // Objetos perdidos activos: solo campos públicos (nunca rasgos privados).
+    tasks.push(
+      db.objetoPerdido
+        .findMany({
+          where: { estado: { in: ["ABIERTO", "EN_CUSTODIA", "RECLAMADO"] }, OR: [{ codigo: ci }, { titulo: ci }, { descripcion: ci }, { marca: ci }] },
+          take: 5,
+          orderBy: { fecha: "desc" },
+          select: { id: true, codigo: true, titulo: true, descripcion: true, tipo: true, lugar: true },
+        })
+        .then((rs) =>
+          rs.forEach((o) =>
+            hits.push({ tipo: o.tipo === "PERDIDO" ? "Objeto perdido" : "Objeto encontrado", titulo: `${o.codigo ?? ""} · ${o.titulo ?? o.descripcion.slice(0, 60)}`, subtitulo: o.lugar ?? undefined, href: `/objetos-perdidos/${o.id}` }),
+          ),
+        ),
     );
   }
   if (/^\d{6}$/.test(q) && can(ctx, ["porteria.registrar", "visitantes.ver_todos"])) {

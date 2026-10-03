@@ -161,8 +161,16 @@ export const MODULOS = {
     },
   },
   clasificados: {
-    label: "Clasificados y objetos perdidos",
+    label: "Clasificados",
     acciones: { ver: "Ver", publicar: "Publicar", moderar: "Moderar" },
+  },
+  objetos: {
+    label: "Objetos perdidos",
+    acciones: {
+      ver: "Buscar objetos perdidos y encontrados",
+      reportar: "Reportar objetos y reclamar los encontrados",
+      gestionar: "Recibir en custodia, aprobar reclamos, entregar y disponer",
+    },
   },
   documentos: {
     label: "Documentos",
@@ -377,6 +385,8 @@ const RESIDENTE_COMUN = [
   "comunicaciones.comentar",
   "clasificados.ver",
   "clasificados.publicar",
+  "objetos.ver",
+  "objetos.reportar",
   "documentos.ver",
   "calendario.ver",
   "directorio.ver",
@@ -485,6 +495,7 @@ export const DEFAULT_ROLE_PERMS: Record<RolBase, PermKey[]> = {
     "obras.*",
     "comunicaciones.*",
     "clasificados.*",
+    "objetos.*",
     "documentos.ver",
     "documentos.crear",
     "calendario.*",
@@ -531,6 +542,7 @@ export const DEFAULT_ROLE_PERMS: Record<RolBase, PermKey[]> = {
     "obras.ver_todos",
     "calendario.ver",
     "empleados.ver",
+    "objetos.*",
   ]),
   MANTENIMIENTO: match([
     "tickets.ver",
@@ -570,6 +582,8 @@ export const DEFAULT_ROLE_PERMS: Record<RolBase, PermKey[]> = {
     "paqueteria.ver",
     "calendario.ver",
     "clasificados.ver",
+    "objetos.ver",
+    "objetos.reportar",
     "documentos.ver",
     "encuestas.ver",
     "emergencias.panico",

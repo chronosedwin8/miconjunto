@@ -84,6 +84,7 @@ export const guardarParametrosAction = action(
       datos: z.object({ responsable: zs.optText(200), emailContacto: zs.optText(200), politicaVersion: zs.optText(20), finalidad: zs.optText(2000), politicaTexto: zs.optText(20000) }).partial().optional(),
       cobranza: z.object({ maxContactosSemanaCanal: int(1, 7) }).partial().optional(),
       ia: z.object({ activo: bool() }).partial().optional(),
+      objetosPerdidos: z.object({ diasCustodia: int(7, 365), diasPerdido: int(15, 365) }).partial().optional(),
       seccion: z.string().optional(),
     }),
   },

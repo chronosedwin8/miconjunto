@@ -7,6 +7,7 @@ import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { NavGroup } from "@/lib/nav";
 import { NavIcon } from "./icons";
+import { LogoutButton } from "./logout-button";
 
 export function Sidebar({ groups, conjuntoNombre, logoUrl }: { groups: NavGroup[]; conjuntoNombre: string; logoUrl?: string | null }) {
   const pathname = usePathname();
@@ -65,6 +66,9 @@ export function Sidebar({ groups, conjuntoNombre, logoUrl }: { groups: NavGroup[
           </div>
         ))}
       </nav>
+      <div className="border-t p-2">
+        <LogoutButton compacto={collapsed} />
+      </div>
     </aside>
   );
 }

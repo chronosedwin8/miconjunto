@@ -30,3 +30,5 @@ npm run dev                 # web (http://localhost:3000) + worker de jobs
 | Propietario | propietario@demo.co | Demo1234* |
 | Residente | residente@demo.co | Demo1234* |
 | Mantenimiento | mantenimiento@demo.co | Demo1234* |
+| Familiar con acceso derivado (T1-101, todo el hogar) | familiar@demo.co | Demo1234* |
+| Empleada con acceso derivado (T1-101, visitantes y paquetes) | empleada@demo.co | Demo1234* |

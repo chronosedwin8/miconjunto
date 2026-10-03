@@ -5,11 +5,12 @@ import { revalidatePath } from "next/cache";
 import { action } from "@/lib/action";
 import { zs } from "@/lib/validation";
 import { cerrarEncuesta, crearEncuesta, eliminarEncuesta, responderEncuesta } from "@/lib/encuestas/service";
+import { MAX_OPCIONES, MAX_PREGUNTAS } from "@/lib/encuestas/limites";
 
 const preguntaSchema = z.object({
   tipo: z.enum(["UNICA", "MULTIPLE", "ESCALA", "TEXTO"]),
   texto: z.string().trim().min(3, "Escribe la pregunta").max(300),
-  opciones: z.array(z.string().max(200)).max(15).optional(),
+  opciones: z.array(z.string().max(200)).max(MAX_OPCIONES).optional(),
   requerida: z.boolean().optional(),
 });
 
@@ -21,7 +22,7 @@ const crearSchema = z.object({
   audiencia: z.enum(["TODOS", "PROPIETARIOS", "TORRE", "SEGMENTO"]),
   torreId: zs.optId(),
   segmentoId: zs.optId(),
-  preguntas: z.array(preguntaSchema).min(1, "Agrega al menos una pregunta").max(30),
+  preguntas: z.array(preguntaSchema).min(1, "Agrega al menos una pregunta").max(MAX_PREGUNTAS, `Máximo ${MAX_PREGUNTAS} preguntas`),
 });
 
 export const crearEncuestaAction = action({ perm: "encuestas.crear", schema: crearSchema }, async (input, ctx) => {

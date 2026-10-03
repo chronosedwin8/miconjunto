@@ -135,6 +135,10 @@ const OVERRIDES: Record<string, string> = {
   PUBLICO: "Página pública",
   APP: "App",
   A_TIEMPO: "A tiempo",
+  // Objetos perdidos
+  ELECTRONICO: "Electrónico",
+  JOYA: "Joya o reloj",
+  RECLAMADO: "Reclamo aprobado",
 };
 
 export function label(v: string | null | undefined): string {
@@ -257,6 +261,10 @@ const TONES: Record<string, Tone> = {
   LEVE: "secondary",
   BAJA: "secondary",
   A_TIEMPO: "success",
+  // Objetos perdidos
+  EN_CUSTODIA: "info",
+  RECLAMADO: "warning",
+  DONADO: "secondary",
 };
 
 export function tone(v: string | null | undefined): Tone {

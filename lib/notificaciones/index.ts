@@ -137,6 +137,7 @@ export async function usuariosDeUnidad(conjuntoId: string, unidadId: string, opt
       conjuntoId,
       unidadId,
       estado: "ACTIVO",
+      accesoPausado: false,
       deletedAt: null,
       persona: { usuarioId: { not: null }, deletedAt: null },
       ...(opts?.soloPropietarios

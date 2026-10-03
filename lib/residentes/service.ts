@@ -7,6 +7,8 @@ import { AppError, notFound } from "@/lib/errors";
 import { can, seesAll } from "@/lib/permisos";
 import { notify, usuariosConPermiso, usuariosDeUnidad } from "@/lib/notificaciones";
 import { nombreCompleto } from "@/lib/format";
+import { terminarAccesosDerivados } from "@/lib/hogar/cascada";
+import { esDerivado } from "@/lib/hogar/capacidades";
 import {
   VINCULOS_HABITAN,
   VINCULOS_PERSONAL,
@@ -314,14 +316,20 @@ export async function actualizarVinculo(ctx: Ctx, id: string, input: Partial<Omi
     }
   }
   const data: Prisma.VinculoUnidadUncheckedUpdateInput = {};
+  const derivado = esDerivado(v);
   if (input.tipo) data.tipo = input.tipo;
-  if (input.principal !== undefined) data.principal = input.principal;
+  // Un acceso derivado no se vuelve titular marcándose principal (solo la administración puede hacerlo).
+  if (input.principal !== undefined && (!derivado || gestor)) data.principal = input.principal;
   if (input.porcentajePropiedad !== undefined) data.porcentajePropiedad = input.porcentajePropiedad;
   if (input.horario !== undefined) {
     const h = horarioOrError(input.horario);
     data.horarioPermitido = h ?? Prisma.DbNull;
   }
-  if (input.puedeVerCuenta !== undefined && (gestor || esPropietarioDe(ctx, v.unidadId))) data.puedeVerCuenta = input.puedeVerCuenta;
+  if (input.puedeVerCuenta !== undefined && (gestor || esPropietarioDe(ctx, v.unidadId))) {
+    data.puedeVerCuenta = input.puedeVerCuenta;
+    // En accesos derivados, ver la cuenta es la capacidad "cuenta": se mantienen sincronizados.
+    if (derivado) data.capacidadesHogar = input.puedeVerCuenta ? [...new Set([...v.capacidadesHogar, "cuenta"])] : v.capacidadesHogar.filter((c) => c !== "cuenta");
+  }
   if (input.fechaFin !== undefined) data.fechaFin = input.fechaFin;
   const nuevo = await ctx.db.vinculoUnidad.update({ where: { id }, data });
   await audit(ctx, "editar", "VinculoUnidad", id, v, nuevo);
@@ -340,6 +348,7 @@ export async function finalizarVinculo(ctx: Ctx, id: string) {
   }
   await ctx.db.vinculoUnidad.update({ where: { id }, data: { estado: "INACTIVO", fechaFin: new Date() } });
   await audit(ctx, "finalizar", "VinculoUnidad", id, { estado: v.estado }, { estado: "INACTIVO", persona: nombreCompleto(v.persona), unidad: v.unidad.codigo });
+  await terminarAccesosDerivados(ctx, [id], `Finalizó el vínculo de ${nombreCompleto(v.persona)} con ${v.unidad.codigo}`);
   const restantes = await ctx.db.vinculoUnidad.count({ where: { personaId: v.personaId, estado: { in: ["ACTIVO", "PENDIENTE_APROBACION"] } } });
   if (restantes === 0 && !v.persona.usuarioId) await anonimizarPersona(ctx, v.personaId, "Sin vínculos activos tras retiro");
   if (v.tipo === "ARRENDATARIO" && v.unidad.estadoOcupacion === "ARRENDADA") {
@@ -362,6 +371,7 @@ export async function resolverVinculo(ctx: Ctx, id: string, aprobar: boolean, mo
     await ctx.db.unidad.update({ where: { id: v.unidadId }, data: { estadoOcupacion: "ARRENDADA" } });
   }
   await audit(ctx, aprobar ? "aprobar_vinculo" : "rechazar_vinculo", "VinculoUnidad", id, { estado: v.estado }, { estado: nuevo.estado, motivo });
+  if (!aprobar) await terminarAccesosDerivados(ctx, [id], `Se rechazó el vínculo de ${nombreCompleto(v.persona)} con ${v.unidad.codigo}`);
   const destinatarios = new Set(await usuariosDeUnidad(ctx.conjuntoId, v.unidadId, { soloPropietarios: true }));
   if (v.persona.usuarioId) destinatarios.add(v.persona.usuarioId);
   await notify({
@@ -407,7 +417,9 @@ export async function anonimizarPersona(ctx: Ctx, id: string, motivo: string) {
 export async function retirarPersona(ctx: Ctx, id: string, motivo?: string | null) {
   const p = await obtenerPersona(ctx, id);
   const unidades = [...new Set(p.vinculos.map((v) => v.unidadId))];
+  const terminados = p.vinculos.filter((v) => v.estado === "ACTIVO" || v.estado === "PENDIENTE_APROBACION").map((v) => v.id);
   await ctx.db.vinculoUnidad.updateMany({ where: { personaId: id, estado: { in: ["ACTIVO", "PENDIENTE_APROBACION"] } }, data: { estado: "INACTIVO", fechaFin: new Date() } });
+  await terminarAccesosDerivados(ctx, terminados, `Retiro de ${nombreCompleto(p)}`);
   if (p.usuarioId) {
     const m = await ctx.db.membresiaConjunto.findFirst({ where: { usuarioId: p.usuarioId }, include: { rol: true } });
     if (m && ["PROPIETARIO", "RESIDENTE", "CONVIVIENTE"].includes(m.rol.basadoEnClave ?? m.rol.clave)) {

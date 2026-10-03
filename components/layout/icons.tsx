@@ -36,6 +36,7 @@ import {
   Clock,
   Menu,
   Circle,
+  PackageSearch,
   type LucideIcon,
 } from "lucide-react";
 
@@ -77,6 +78,7 @@ const ICONS: Record<string, LucideIcon> = {
   list: List,
   clock: Clock,
   menu: Menu,
+  "package-search": PackageSearch,
 };
 
 export function NavIcon({ name, className }: { name: string; className?: string }) {

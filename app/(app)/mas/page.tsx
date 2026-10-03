@@ -4,6 +4,7 @@ import { visibleNav } from "@/lib/nav";
 import { iaDisponible } from "@/lib/ia/disponible";
 import { NavIcon } from "@/components/layout/icons";
 import { PageHeader } from "@/components/app/page-header";
+import { LogoutButton } from "@/components/layout/logout-button";
 
 export const metadata = { title: "Más" };
 
@@ -35,6 +36,9 @@ export default async function MasPage() {
         <div className="grid grid-cols-2 gap-2">
           <Link href="/perfil" className="rounded-xl border bg-card p-4 text-sm font-medium hover:bg-muted">Mi perfil y privacidad</Link>
           <Link href="/notificaciones" className="rounded-xl border bg-card p-4 text-sm font-medium hover:bg-muted">Notificaciones</Link>
+        </div>
+        <div className="mt-2 rounded-xl border bg-card p-2">
+          <LogoutButton className="justify-center" />
         </div>
       </section>
     </>

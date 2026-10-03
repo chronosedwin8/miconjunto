@@ -9,6 +9,7 @@ import { decrypt, encrypt } from "@/lib/crypto";
 import { hashPassword, passwordIssues, verifyPassword } from "@/lib/auth/password";
 import { notify, usuariosConPermiso } from "@/lib/notificaciones";
 import { anonimizarPersona, miPersona, sincronizarBanderasUnidades, type PersonaInput } from "@/lib/residentes/service";
+import { terminarAccesosDerivados } from "@/lib/hogar/cascada";
 
 /**
  * Perfil del usuario y derechos del titular (habeas data, Ley 1581 de 2012):
@@ -224,6 +225,7 @@ export async function solicitarSupresion(ctx: Ctx, input: { motivo?: string | nu
       unidades.add(v.unidadId);
       if (v.tipo !== "PROPIETARIO" && v.tipo !== "COPROPIETARIO" && v.estado !== "INACTIVO") {
         await ctx.db.vinculoUnidad.update({ where: { id: v.id }, data: { estado: "INACTIVO", fechaFin: new Date() } });
+        await terminarAccesosDerivados(ctx, [v.id], "El titular ejerció su derecho de supresión de datos");
       }
     }
     await anonimizarPersona(ctx, p.id, `Supresión solicitada por el titular${input.motivo ? `: ${input.motivo}` : ""}`);
