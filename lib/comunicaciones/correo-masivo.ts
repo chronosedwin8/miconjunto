@@ -46,7 +46,7 @@ export function envolverCorreo(opts: { conjuntoNombre: string; color?: string | 
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;border-radius:12px;overflow:hidden">
 <tr><td style="background:${color};padding:18px 24px;color:#fff;font-size:18px;font-weight:bold">${esc(opts.conjuntoNombre)}</td></tr>
 <tr><td style="padding:16px 24px 24px;font-size:15px;line-height:22px;color:#3f3f46">${opts.cuerpoHtml}</td></tr>
-<tr><td style="padding:12px 24px 20px;border-top:1px solid #e4e4e7;font-size:12px;color:#71717a">Recibes este correo porque estás registrado en ${esc(opts.conjuntoNombre)} en MiConjunto. Para dejar de recibir comunicaciones no obligatorias, ajusta tus preferencias en la aplicación.</td></tr>
+<tr><td style="padding:12px 24px 20px;border-top:1px solid #e4e4e7;font-size:12px;color:#71717a">Recibes este correo porque estás registrado en ${esc(opts.conjuntoNombre)} en Conjunto360. Para dejar de recibir comunicaciones no obligatorias, ajusta tus preferencias en la aplicación.</td></tr>
 </table></td></tr></table></body></html>`;
 }
 

@@ -27,7 +27,7 @@ export function FacturaPdf({ conjunto, tipo, numero, cufe, fecha, datos, qrDataU
   const iva = filas.reduce((a, f) => a + f._iva, 0);
   const titulo = tipo === "FACTURA" ? "Factura electrónica de venta" : "Nota crédito electrónica";
   return (
-    <Document title={`${titulo} ${numero}`} author="MiConjunto">
+    <Document title={`${titulo} ${numero}`} author="Conjunto360">
       <Page size="A4" style={pdfStyles.page}>
         {simulada ? (
           <View style={{ position: "absolute", top: 330, left: 40, right: 40, transform: "rotate(-30deg)" }} fixed>
@@ -100,7 +100,7 @@ export function FacturaPdf({ conjunto, tipo, numero, cufe, fecha, datos, qrDataU
             {datos.observacion ? <Text style={[pdfStyles.p, { marginTop: 6 }]}>Observación: {datos.observacion}</Text> : null}
           </View>
         </View>
-        <PdfFooter texto={simulada ? "SIMULACIÓN — sin validez fiscal · MiConjunto" : "Representación gráfica · MiConjunto"} />
+        <PdfFooter texto={simulada ? "SIMULACIÓN — sin validez fiscal · Conjunto360" : "Representación gráfica · Conjunto360"} />
       </Page>
     </Document>
   );

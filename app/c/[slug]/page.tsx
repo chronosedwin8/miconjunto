@@ -158,7 +158,7 @@ export default async function PaginaPublicaConjunto({ params }: { params: Promis
         </section>
       </main>
       <footer className="border-t py-6 text-center text-xs text-muted-foreground">
-        {c.nombre} · Con la tecnología de <span className="font-semibold">MiConjunto</span>
+        {c.nombre} · Con la tecnología de <span className="font-semibold">Conjunto360</span>
       </footer>
     </div>
   );

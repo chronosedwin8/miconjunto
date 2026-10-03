@@ -50,7 +50,7 @@ export default async function ActivoPublicoPage({ params }: { params: Promise<{ 
       {!su && <p className="text-center text-xs text-muted-foreground">Te pediremos iniciar sesión con tu cuenta del conjunto.</p>}
       {esDelConjunto && (
         <Button variant="outline" className="w-full" render={<Link href="/inicio" />}>
-          Ir a MiConjunto
+          Ir a Conjunto360
         </Button>
       )}
     </div>

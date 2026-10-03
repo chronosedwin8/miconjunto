@@ -27,7 +27,7 @@ function xmlSimulado(tipo: string, numero: string, cufe: string, fecha: Date, d:
     )
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>
-<!-- SIMULACIÓN — sin validez fiscal. Documento generado por MiConjunto en modo demostración. -->
+<!-- SIMULACIÓN — sin validez fiscal. Documento generado por Conjunto360 en modo demostración. -->
 <${tipo} xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
   <cbc:ID>${numero}</cbc:ID>
   <cbc:UUID schemeName="CUFE-SHA384">${cufe}</cbc:UUID>

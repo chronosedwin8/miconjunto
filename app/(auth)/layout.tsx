@@ -9,14 +9,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <Building2 className="size-7" aria-hidden="true" />
           </div>
           <div>
-            <p className="text-xl font-bold leading-tight">MiConjunto</p>
+            <p className="text-xl font-bold leading-tight">Conjunto360</p>
             <p className="text-sm text-muted-foreground">Tu conjunto, en tu bolsillo</p>
           </div>
         </div>
         {children}
       </div>
       <footer className="pb-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} MiConjunto · <a className="underline" href="/politica-datos">Política de datos</a>
+        © {new Date().getFullYear()} Conjunto360 · <a className="underline" href="/politica-datos">Política de datos</a>
       </footer>
     </main>
   );

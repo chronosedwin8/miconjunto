@@ -36,7 +36,7 @@ export async function etiquetasPdf(activos: EtiquetaActivo[], conjunto: { nombre
   for (let i = 0; i < activos.length; i += ETIQUETAS_POR_HOJA) hojas.push(activos.slice(i, i + ETIQUETAS_POR_HOJA).map((_, j) => i + j));
   const color = conjunto.colorPrimario ?? "#0f766e";
   const doc = (
-    <Document title={`Etiquetas QR · ${conjunto.nombre}`} author="MiConjunto">
+    <Document title={`Etiquetas QR · ${conjunto.nombre}`} author="Conjunto360">
       {hojas.map((idx, h) => (
         <Page key={h} size="A4" style={{ padding: 18, fontFamily: "Helvetica", color: "#18181b" }}>
           <View style={{ flexDirection: "row", flexWrap: "wrap", height: "100%" }}>

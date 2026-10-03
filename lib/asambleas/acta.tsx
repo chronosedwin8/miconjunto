@@ -57,7 +57,7 @@ export async function actaAsambleaPdf(ctx: Ctx, asambleaId: string) {
   const qr = verif ? await QRCode.toDataURL(verif, { margin: 1, width: 240 }) : null;
 
   const doc = (
-    <Document title={`Acta — ${a.titulo}`} author="MiConjunto">
+    <Document title={`Acta — ${a.titulo}`} author="Conjunto360">
       <Page size="A4" style={pdfStyles.page}>
         <PdfHeader
           conjunto={conjunto}
@@ -138,7 +138,7 @@ export async function actaAsambleaPdf(ctx: Ctx, asambleaId: string) {
             </View>
           </View>
         ) : null}
-        <PdfFooter texto={`${conjunto.nombre} · Acta generada por MiConjunto`} />
+        <PdfFooter texto={`${conjunto.nombre} · Acta generada por Conjunto360`} />
       </Page>
     </Document>
   );

@@ -5,7 +5,7 @@ export type ExportColumn = { header: string; key: string; width?: number; tipo?:
 /** Genera un .xlsx con encabezado formateado. */
 export async function toXlsx(titulo: string, columns: ExportColumn[], rows: Record<string, unknown>[], hoja = "Datos") {
   const wb = new ExcelJS.Workbook();
-  wb.creator = "MiConjunto";
+  wb.creator = "Conjunto360";
   wb.created = new Date();
   const ws = wb.addWorksheet(hoja.slice(0, 31));
   ws.columns = columns.map((c) => ({ header: c.header, key: c.key, width: c.width ?? Math.max(12, c.header.length + 4) }));

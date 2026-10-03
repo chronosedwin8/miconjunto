@@ -154,7 +154,7 @@ export default async function FacturaPage({ params }: { params: Promise<{ id: st
           <Json titulo="Payload enviado al proveedor" valor={payload.enviado} />
           <Json titulo="Respuesta del proveedor" valor={f.respuesta} />
           <Json titulo="Errores / advertencias DIAN" valor={errores?.detalle ?? errores?.advertencias ?? null} />
-          <Json titulo="Datos de origen (MiConjunto)" valor={payload.datos} />
+          <Json titulo="Datos de origen (Conjunto360)" valor={payload.datos} />
         </div>
       </Section>
     </>

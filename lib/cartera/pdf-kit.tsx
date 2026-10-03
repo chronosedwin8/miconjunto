@@ -44,7 +44,7 @@ export async function pdfKit() {
   function Footer({ texto }: { texto?: string }) {
     return (
       <View style={s.footer} fixed>
-        <Text>{texto ?? "Generado por MiConjunto"}</Text>
+        <Text>{texto ?? "Generado por Conjunto360"}</Text>
         <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
       </View>
     );

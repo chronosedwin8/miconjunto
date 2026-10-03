@@ -38,7 +38,7 @@ export default async function EstadoPagoPublicoPage({
       <EstadoPagoPoller pendiente={p.estado === "PENDIENTE"} />
       <ResultadoPago estado={p.estado} valor={p.valor} unidad={p.unidad} referencia={p.referencia} recibo={p.numeroRecibo} />
       <p className="mt-4 text-center text-sm text-muted-foreground">
-        ¿Tienes cuenta en MiConjunto?{" "}
+        ¿Tienes cuenta en Conjunto360?{" "}
         <a href="/cuenta" className="font-medium text-primary underline">
           Ver mi cuenta
         </a>

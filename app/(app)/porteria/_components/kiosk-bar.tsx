@@ -81,7 +81,7 @@ export function KioskBar() {
     setScan(false);
     const l = interpretarLectura(texto);
     if (!l) {
-      toast.error("El código leído no es una autorización de MiConjunto.");
+      toast.error("El código leído no es una autorización de Conjunto360.");
       return;
     }
     router.push(l.token ? `/porteria/ingreso?token=${l.token}` : `/porteria/ingreso?codigo=${l.codigo}`);

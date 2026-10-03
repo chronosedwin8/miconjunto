@@ -54,7 +54,7 @@ export function InvitarDialog({
           <DialogHeader>
             <DialogTitle>{res ? "Invitación lista" : "Invitar a crear su cuenta"}</DialogTitle>
             <DialogDescription>
-              {res ? "Le enviamos un correo. Compártela también por WhatsApp para que la vea más rápido." : "Recibirá un enlace para crear su cuenta en MiConjunto. Vence en 14 días."}
+              {res ? "Le enviamos un correo. Compártela también por WhatsApp para que la vea más rápido." : "Recibirá un enlace para crear su cuenta en Conjunto360. Vence en 14 días."}
             </DialogDescription>
           </DialogHeader>
           {res ? (

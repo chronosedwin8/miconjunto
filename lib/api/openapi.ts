@@ -59,7 +59,7 @@ export function openApiSpec() {
   }
   return {
     openapi: "3.1.0",
-    info: { title: "API de MiConjunto", version: "1.0.0", description: "API REST por conjunto. Autenticación con `Authorization: Bearer <token>` (Configuración → API y webhooks) o sesión del navegador. Todas las respuestas: `{ data }` o `{ error }`." },
+    info: { title: "API de Conjunto360", version: "1.0.0", description: "API REST por conjunto. Autenticación con `Authorization: Bearer <token>` (Configuración → API y webhooks) o sesión del navegador. Todas las respuestas: `{ data }` o `{ error }`." },
     servers: [{ url: process.env.APP_URL ?? "http://localhost:3000" }],
     components: {
       securitySchemes: {

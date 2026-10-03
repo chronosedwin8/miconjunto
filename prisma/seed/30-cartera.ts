@@ -136,7 +136,7 @@ async function sembrar(s: SeedState) {
       fechaEmision: at(P(6), 1, 0),
       fechaVencimiento: at(P(6), 10, 0),
       origen: "APERTURA",
-      descripcion: "Saldo de apertura (cartera anterior a MiConjunto)",
+      descripcion: "Saldo de apertura (cartera anterior a Conjunto360)",
     });
   }
 

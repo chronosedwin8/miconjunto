@@ -32,7 +32,7 @@ export async function reciboPdf(ctx: Pick<Ctx, "db" | "conjuntoId">, pagoId: str
   const excedente = toNumber(p.valor) - aplicado;
   const anulado = p.estado === "ANULADO";
   const doc = (
-    <Document title={`Recibo de caja ${p.numeroRecibo ?? ""}`} author="MiConjunto">
+    <Document title={`Recibo de caja ${p.numeroRecibo ?? ""}`} author="Conjunto360">
       <Page size="A5" orientation="landscape" style={s.page}>
         <Header
           conjunto={conjunto}
@@ -167,7 +167,7 @@ export async function cartasCobroPdf(ctx: Pick<Ctx, "db" | "conjuntoId">, unidad
   const datos: DatosCarta[] = [];
   for (const id of unidadIds) datos.push(await datosCarta(ctx, id));
   const doc = (
-    <Document title="Cartas de cobro" author="MiConjunto">
+    <Document title="Cartas de cobro" author="Conjunto360">
       {datos.map((d) => (
         <CartaPagina k={kit} key={d.unidadId} conjunto={conjunto} d={d} plantilla={plantilla} hoy={hoy} linkPago={linkPago} />
       ))}
@@ -186,7 +186,7 @@ export async function acuerdoPdf(ctx: Pick<Ctx, "db" | "conjuntoId">, acuerdoId:
   const valorTrasladado = new Map(traslados.map((t) => [t.cuotaId, toNumber(t.valor)]));
   const deudor = titulares.map((t) => `${t.nombre}, ${t.tipoDocumento} ${t.documento}`).join(" y ") || "el propietario";
   const doc = (
-    <Document title={`Acuerdo de pago ${acuerdo.unidad.codigo}`} author="MiConjunto">
+    <Document title={`Acuerdo de pago ${acuerdo.unidad.codigo}`} author="Conjunto360">
       <Page size="LETTER" style={[s.page, { padding: 44 }]}>
         <Header conjunto={conjunto} derecha={<Text style={s.muted}>Estado: {label(acuerdo.estado)}</Text>} />
         <Text style={[s.title, { textAlign: "center" }]}>ACUERDO DE PAGO</Text>

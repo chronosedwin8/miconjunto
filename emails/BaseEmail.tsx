@@ -11,7 +11,7 @@ export type BaseEmailProps = {
   pie?: string;
 };
 
-export function BaseEmail({ titulo, conjuntoNombre = "MiConjunto", color = "#0f766e", parrafos, boton, pie }: BaseEmailProps) {
+export function BaseEmail({ titulo, conjuntoNombre = "Conjunto360", color = "#0f766e", parrafos, boton, pie }: BaseEmailProps) {
   return (
     <Html lang="es">
       <Head />
@@ -38,7 +38,7 @@ export function BaseEmail({ titulo, conjuntoNombre = "MiConjunto", color = "#0f7
             ) : null}
             <Hr style={{ margin: "24px 0 12px", borderColor: "#e4e4e7" }} />
             <Text style={{ fontSize: 12, color: "#71717a" }}>
-              {pie ?? "Este mensaje fue enviado por MiConjunto en nombre de la administración de tu copropiedad."}
+              {pie ?? "Este mensaje fue enviado por Conjunto360 en nombre de la administración de tu copropiedad."}
             </Text>
           </Section>
         </Container>

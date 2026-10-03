@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "MiConjunto — Administración de propiedad horizontal",
-    short_name: "MiConjunto",
+    name: "Conjunto360 — Administración de propiedad horizontal",
+    short_name: "Conjunto360",
     description: "Pagos, reservas, portería, PQRS y comunicaciones de tu conjunto.",
     start_url: "/inicio",
     scope: "/",

@@ -31,7 +31,7 @@ export default async function InvitacionPage({ params }: { params: Promise<{ tok
             de la unidad <b>{data.unidad.codigo}</b>
           </>
         ) : null}
-        . {data.usuarioExiste ? "Ya tienes cuenta en MiConjunto: confirma para agregar este conjunto." : "Crea tu cuenta en un minuto."}
+        . {data.usuarioExiste ? "Ya tienes cuenta en Conjunto360: confirma para agregar este conjunto." : "Crea tu cuenta en un minuto."}
       </p>
       <InvitacionForm
         token={token}

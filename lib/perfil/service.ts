@@ -123,7 +123,7 @@ export async function datosQrMfa(ctx: Ctx) {
   const u = await prisma.usuario.findUnique({ where: { id: ctx.userId }, select: { email: true, mfaSecret: true, mfaActivo: true } });
   if (!u?.mfaSecret || u.mfaActivo) return null;
   const secret = leerSecreto(u.mfaSecret);
-  const uri = generateURI({ issuer: "MiConjunto", label: u.email, secret });
+  const uri = generateURI({ issuer: "Conjunto360", label: u.email, secret });
   const qr = await QRCode.toDataURL(uri, { margin: 1, width: 240 });
   return { secret, uri, qr };
 }

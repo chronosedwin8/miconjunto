@@ -217,7 +217,7 @@ export async function ejecutarCampanaCobro(campanaId: string) {
       definicionSegmento: { ...def, unidades: conSaldo, omitidosFrecuencia: omitidos } as Prisma.InputJsonValue,
     },
   });
-  await audit({ conjuntoId: campana.conjuntoId, nombre: "Sistema MiConjunto" }, "enviar_campana_cobro", "CampanaCorreo", campana.id, undefined, {
+  await audit({ conjuntoId: campana.conjuntoId, nombre: "Sistema Conjunto360" }, "enviar_campana_cobro", "CampanaCorreo", campana.id, undefined, {
     unidades: conSaldo,
     correos,
     omitidos,

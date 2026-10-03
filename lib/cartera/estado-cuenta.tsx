@@ -80,7 +80,7 @@ export async function estadoCuentaPdf(ctx: Pick<Ctx, "db" | "conjuntoId">, unida
   const qr = await QRCode.toDataURL(payUrl, { margin: 1, width: 240 });
   const s = e.saldo;
   const doc = (
-    <Document title={`Estado de cuenta ${e.unidad.codigo}`} author="MiConjunto">
+    <Document title={`Estado de cuenta ${e.unidad.codigo}`} author="Conjunto360">
       <Page size="A4" style={st.page}>
         <Header
           conjunto={conjunto}

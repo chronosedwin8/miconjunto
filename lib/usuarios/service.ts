@@ -65,12 +65,12 @@ export async function invitarUsuario(ctx: Ctx, input: InvitarInput) {
   const unidad = input.unidadId ? await ctx.db.unidad.findUnique({ where: { id: input.unidadId } }) : null;
   await queueBrandedEmail(
     email,
-    `Te invitaron a ${ctx.conjunto.nombre} en MiConjunto`,
+    `Te invitaron a ${ctx.conjunto.nombre} en Conjunto360`,
     {
       conjuntoNombre: ctx.conjunto.nombre,
       color: ctx.conjunto.colorPrimario ?? undefined,
       parrafos: [
-        `Hola${input.nombre ? ` ${input.nombre.split(" ")[0]}` : ""}, ${ctx.nombre} te invitó a usar MiConjunto como ${rol.nombre.toLowerCase()}${unidad ? ` de la unidad ${unidad.codigo}` : ""}.`,
+        `Hola${input.nombre ? ` ${input.nombre.split(" ")[0]}` : ""}, ${ctx.nombre} te invitó a usar Conjunto360 como ${rol.nombre.toLowerCase()}${unidad ? ` de la unidad ${unidad.codigo}` : ""}.`,
         "Con la app podrás pagar la administración, reservar zonas comunes, autorizar visitantes, recibir avisos de paquetes y mucho más.",
         "El enlace vence en 14 días.",
       ],
@@ -82,7 +82,7 @@ export async function invitarUsuario(ctx: Ctx, input: InvitarInput) {
   return {
     id: inv.id,
     link,
-    whatsapp: waShareLink(`Hola, te invito a ${ctx.conjunto.nombre} en MiConjunto. Crea tu cuenta aquí: ${link}`, input.telefono ?? undefined),
+    whatsapp: waShareLink(`Hola, te invito a ${ctx.conjunto.nombre} en Conjunto360. Crea tu cuenta aquí: ${link}`, input.telefono ?? undefined),
   };
 }
 

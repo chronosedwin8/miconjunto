@@ -23,7 +23,7 @@ export default async function PagoPublicoPage({ params }: { params: Promise<{ to
         <LinkIcon className="mx-auto mb-3 size-10 text-muted-foreground" />
         <h1 className="text-xl font-bold">{permitido ? "Este link de pago no es válido o ya venció" : "Demasiadas consultas"}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {permitido ? "Pide un nuevo link a la administración o ingresa a MiConjunto para pagar desde tu cuenta." : "Espera un minuto e inténtalo de nuevo."}
+          {permitido ? "Pide un nuevo link a la administración o ingresa a Conjunto360 para pagar desde tu cuenta." : "Espera un minuto e inténtalo de nuevo."}
         </p>
         <a href="/login" className="mt-4 inline-flex h-11 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground">
           Iniciar sesión

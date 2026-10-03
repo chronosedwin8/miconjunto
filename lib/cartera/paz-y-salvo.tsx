@@ -121,7 +121,7 @@ export async function pazYSalvoPdf(ctx: Pick<Ctx, "db" | "conjuntoId">, id: stri
   const qr = await QRCode.toDataURL(url, { margin: 1, width: 300 });
   const anulado = c.estado === "ANULADO";
   const doc = (
-    <Document title={`Paz y salvo ${c.unidad.codigo}`} author="MiConjunto">
+    <Document title={`Paz y salvo ${c.unidad.codigo}`} author="Conjunto360">
       <Page size="LETTER" style={[s.page, { padding: 48 }]}>
         <Header conjunto={conjunto} derecha={<Text style={s.muted}>Código {c.codigo}</Text>} />
         <Text style={[s.title, { textAlign: "center", marginTop: 16, fontSize: 18 }]}>CERTIFICADO DE PAZ Y SALVO</Text>
@@ -145,7 +145,7 @@ export async function pazYSalvoPdf(ctx: Pick<Ctx, "db" | "conjuntoId">, id: stri
             <Text>Fecha de expedición: {fechaLarga(c.fecha)}</Text>
             <Text>Válido hasta: {fecha(c.vigenteHasta)}</Text>
             {c.personaNombre ? <Text>Solicitado por / a nombre de: {c.personaNombre}</Text> : null}
-            <Text style={[s.muted, { marginTop: 4 }]}>{c.automatico ? "Emitido automáticamente por MiConjunto" : "Emitido por la administración"}</Text>
+            <Text style={[s.muted, { marginTop: 4 }]}>{c.automatico ? "Emitido automáticamente por Conjunto360" : "Emitido por la administración"}</Text>
             <View style={{ marginTop: 36, borderTopWidth: 0.8, borderTopColor: "#18181b", width: 220, paddingTop: 3 }}>
               <Text>Administración</Text>
               <Text style={s.muted}>{conjunto.nombre}</Text>

@@ -331,7 +331,7 @@ export const ROLES_BASE = [
 export type RolBase = (typeof ROLES_BASE)[number];
 
 export const ROL_LABEL: Record<RolBase | "SUPERADMIN", string> = {
-  SUPERADMIN: "SuperAdmin MiConjunto",
+  SUPERADMIN: "SuperAdmin Conjunto360",
   ADMINISTRADOR: "Administrador",
   CONSEJO: "Consejo de administración",
   REVISOR_FISCAL: "Revisor fiscal",

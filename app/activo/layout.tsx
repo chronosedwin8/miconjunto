@@ -9,12 +9,12 @@ export default function ActivoPublicoLayout({ children }: { children: React.Reac
           <div className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
             <Building2 className="size-6" aria-hidden="true" />
           </div>
-          <p className="text-lg font-bold leading-tight">MiConjunto</p>
+          <p className="text-lg font-bold leading-tight">Conjunto360</p>
         </div>
         {children}
       </div>
       <footer className="pb-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} MiConjunto · <a className="underline" href="/politica-datos">Política de datos</a>
+        © {new Date().getFullYear()} Conjunto360 · <a className="underline" href="/politica-datos">Política de datos</a>
       </footer>
     </main>
   );

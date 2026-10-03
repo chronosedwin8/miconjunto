@@ -34,7 +34,7 @@ async function smtpFor(conjuntoId: string | null): Promise<SmtpConfig | null> {
       port: Number(process.env.SMTP_PORT || 587),
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
-      from: process.env.SMTP_FROM || "MiConjunto <no-reply@miconjunto.co>",
+      from: process.env.SMTP_FROM || "Conjunto360 <no-reply@miconjunto.co>",
     };
   }
   return null;

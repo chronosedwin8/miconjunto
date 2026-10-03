@@ -77,7 +77,7 @@ export class MercadoPagoProvider implements PaymentProvider {
         back_urls: { success: opciones.redirectUrl, failure: opciones.redirectUrl, pending: opciones.redirectUrl },
         auto_return: "approved",
         notification_url: opciones.webhookUrl,
-        statement_descriptor: "MICONJUNTO",
+        statement_descriptor: "CONJUNTO360",
         expires: true,
         expiration_date_to: new Date(Date.now() + 24 * 3600_000).toISOString(),
       }),

@@ -144,7 +144,7 @@ export const PLANTILLAS: Record<Software, Plantilla> = {
       { header: "Código centro/subcentro de costos", valor: (l) => l.centroCosto },
       { header: "Débito", valor: (l) => num(l.debito) },
       { header: "Crédito", valor: (l) => num(l.credito) },
-      { header: "Observaciones", valor: (l) => `MiConjunto ${l.referencia}` },
+      { header: "Observaciones", valor: (l) => `Conjunto360 ${l.referencia}` },
     ],
   },
   WORLD_OFFICE: {

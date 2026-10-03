@@ -78,3 +78,15 @@ export const guardarPlanAction = saAction(
   z.object({ id: zs.optId(), nombre: zs.text(2, 60), descripcion: zs.optText(300), precioMensual: zs.money(), precioUnidad: zs.money(), maxUnidades: zs.int(1), modulos: zs.list(), activo: zs.bool() }),
   async (input) => ({ id: (await guardarPlan(input)).id }),
 );
+
+// ── Cotizaciones comerciales del sitio público ──
+import { actualizarCotizacion } from "@/lib/comercial/service";
+
+export const actualizarCotizacionAction = saAction(
+  z.object({ id: zs.id(), estado: z.enum(["NUEVA", "CONTACTADA", "GANADA", "PERDIDA"]), notas: zs.optText(2000) }),
+  async ({ id, ...data }, actor) => {
+    const c = await actualizarCotizacion(id, data);
+    await audit({ userId: actor.userId, nombre: actor.nombre }, "actualizar", "CotizacionComercial", id, undefined, { estado: data.estado });
+    return { id: c.id };
+  },
+);

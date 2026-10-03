@@ -95,7 +95,7 @@ export async function notify(input: NotifyInput) {
             conjuntoNombre: conjunto?.nombre,
             color: conjunto?.colorPrimario ?? undefined,
             parrafos: [input.cuerpo],
-            boton: input.enlace ? { texto: "Ver en MiConjunto", url: appUrl(input.enlace) } : undefined,
+            boton: input.enlace ? { texto: "Ver en Conjunto360", url: appUrl(input.enlace) } : undefined,
           },
           { conjuntoId: input.conjuntoId },
         ),

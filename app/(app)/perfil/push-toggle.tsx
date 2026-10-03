@@ -72,7 +72,7 @@ export function PushToggle({ vapidKey }: { vapidKey: string | undefined }) {
 
   if (estado === "cargando") return <p className="text-sm text-muted-foreground">Revisando este dispositivo…</p>;
   if (estado === "no-soportado")
-    return <p className="text-sm text-muted-foreground">Este navegador no permite notificaciones push. En iPhone, agrega MiConjunto a la pantalla de inicio y ábrelo desde ahí.</p>;
+    return <p className="text-sm text-muted-foreground">Este navegador no permite notificaciones push. En iPhone, agrega Conjunto360 a la pantalla de inicio y ábrelo desde ahí.</p>;
   if (estado === "bloqueado") return <p className="text-sm text-muted-foreground">Bloqueaste las notificaciones para este sitio. Actívalas en la configuración del navegador.</p>;
   return estado === "activo" ? (
     <Button variant="outline" onClick={desactivar} disabled={busy}>

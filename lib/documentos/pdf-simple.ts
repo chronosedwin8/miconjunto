@@ -65,7 +65,7 @@ export function pdfSimple(opts: { titulo: string; encabezado?: string; subtitulo
       if (l.t) ops.push(`BT /${l.bold ? "F2" : "F1"} ${l.size} Tf ${M} ${yy.toFixed(1)} Td (${esc(l.t)}) Tj ET`);
       yy -= l.gap ?? 0;
     }
-    ops.push(`BT /F1 8 Tf ${M} 30 Td (${esc(`${opts.encabezado ?? "MiConjunto"} - Página ${i + 1} de ${paginas.length}`)}) Tj ET`);
+    ops.push(`BT /F1 8 Tf ${M} 30 Td (${esc(`${opts.encabezado ?? "Conjunto360"} - Página ${i + 1} de ${paginas.length}`)}) Tj ET`);
     const stream = ops.join("\n");
     const pageId = 5 + i * 2;
     const contentId = pageId + 1;

@@ -113,7 +113,7 @@ export default async function VerificarPage({ params }: { params: Promise<{ codi
             <Building2 className="size-7" aria-hidden="true" />
           </div>
           <div>
-            <p className="text-xl font-bold leading-tight">MiConjunto</p>
+            <p className="text-xl font-bold leading-tight">Conjunto360</p>
             <p className="text-sm text-muted-foreground">Verificación de documentos</p>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default async function VerificarPage({ params }: { params: Promise<{ codi
             <SearchX className="mx-auto mb-2 size-10 text-destructive" />
             <h1 className="text-lg font-semibold">Código no encontrado</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              El código <span className="font-mono">{decodeURIComponent(codigo).slice(0, 80)}</span> no corresponde a ningún documento emitido por MiConjunto. Verifica que lo escribiste bien o comunícate con la administración del conjunto.
+              El código <span className="font-mono">{decodeURIComponent(codigo).slice(0, 80)}</span> no corresponde a ningún documento emitido por Conjunto360. Verifica que lo escribiste bien o comunícate con la administración del conjunto.
             </p>
           </div>
         ) : (

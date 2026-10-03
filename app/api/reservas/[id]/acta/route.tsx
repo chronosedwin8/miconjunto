@@ -70,7 +70,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const recepcion = r.actaRecepcion as unknown as Acta | null;
   const [fe, fr] = await Promise.all([fotosDataUrl(entrega?.fotos ?? []), fotosDataUrl(recepcion?.fotos ?? [])]);
   const doc = (
-    <Document title={`Acta ${r.zona.nombre}`} author="MiConjunto">
+    <Document title={`Acta ${r.zona.nombre}`} author="Conjunto360">
       <Page size="A4" style={pdfStyles.page}>
         <PdfHeader conjunto={{ nombre: conjunto.nombre, nit: conjunto.nit, direccion: conjunto.direccion, ciudad: conjunto.ciudad, telefono: conjunto.telefono, email: conjunto.email }} derecha={<Text style={pdfStyles.bold}>Acta de entrega y recepción</Text>} />
         <Text style={pdfStyles.title}>

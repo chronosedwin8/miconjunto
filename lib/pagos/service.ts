@@ -358,7 +358,7 @@ export async function expirarPendientes(opts?: { horas?: number }) {
     if (r.count === 1) {
       expirados++;
       await audit(
-        { conjuntoId: p.conjuntoId, nombre: "Sistema MiConjunto" },
+        { conjuntoId: p.conjuntoId, nombre: "Sistema Conjunto360" },
         "expirar_pago_en_linea",
         "Pago",
         p.id,

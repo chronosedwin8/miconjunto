@@ -42,7 +42,7 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: "MiConjunto", body: event.data.text() };
+    payload = { title: "Conjunto360", body: event.data.text() };
   }
   event.waitUntil(
     self.registration.showNotification(payload.title, {

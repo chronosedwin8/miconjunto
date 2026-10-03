@@ -3149,3 +3149,46 @@ model ConsultaIA {
 
   @@index([conjuntoId])
 }
+
+// ─────────────────────────────── COMERCIAL (sitio público) ───────────────────────────────
+
+enum EstadoCotizacionComercial {
+  NUEVA
+  CONTACTADA
+  GANADA
+  PERDIDA
+}
+
+/// Cotización solicitada desde la página de precios (global, no pertenece a un conjunto).
+model CotizacionComercial {
+  id             String                    @id @default(cuid())
+  numero         String                    @unique
+  /// Token aleatorio para descargar el PDF sin sesión.
+  token          String                    @unique
+  plan           String
+  cantidad       Int
+  conjuntos      Json                      @default("[]")
+  precioUnitario Decimal                   @db.Decimal(14, 2)
+  subtotal       Decimal                   @db.Decimal(14, 2)
+  descuentoPct   Decimal                   @default(0) @db.Decimal(5, 4)
+  descuento      Decimal                   @default(0) @db.Decimal(14, 2)
+  total          Decimal                   @db.Decimal(14, 2)
+  nombre         String
+  cargo          String?
+  empresa        String?
+  nit            String?
+  email          String
+  telefono       String
+  ciudad         String?
+  mensaje        String?
+  estado         EstadoCotizacionComercial @default(NUEVA)
+  notas          String?
+  origen         String?
+  ip             String?
+  validaHasta    DateTime
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+
+  @@index([estado])
+  @@index([createdAt])
+}

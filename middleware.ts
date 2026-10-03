@@ -8,9 +8,6 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const logged = !!req.auth?.user;
 
-  if (pathname === "/") {
-    return NextResponse.redirect(new URL(logged ? "/inicio" : "/login", req.url));
-  }
   if (!logged && !isPublicPath(pathname)) {
     if (pathname.startsWith("/api/")) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });

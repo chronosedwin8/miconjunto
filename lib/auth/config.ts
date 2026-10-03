@@ -14,6 +14,13 @@ export const PUBLIC_PREFIXES = [
   "/activo/",
   "/offline",
   "/politica-datos",
+  // Sitio comercial público
+  "/funcionalidades",
+  "/precios",
+  "/api/cotizaciones",
+  "/opengraph-image",
+  "/sitemap.xml",
+  "/robots.txt",
   "/api/auth",
   "/api/webhooks",
   "/api/public",
@@ -24,13 +31,14 @@ export const PUBLIC_PREFIXES = [
   "/api/files",
   "/manifest.webmanifest",
   "/sw.js",
+  "/swe-worker-",
   "/icons",
   "/plantillas",
 ];
 
 export function isPublicPath(pathname: string) {
-  if (pathname === "/") return false;
-  return PUBLIC_PREFIXES.some((p) => (p.endsWith("/") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(p + "/")));
+  if (pathname === "/") return true;
+  return PUBLIC_PREFIXES.some((p) => (p.endsWith("/") || p.endsWith("-") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(p + "/")));
 }
 
 /** Configuración compatible con Edge (middleware): sin acceso a BD. */

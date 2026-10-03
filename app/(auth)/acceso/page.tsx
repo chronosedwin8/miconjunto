@@ -8,7 +8,7 @@ export default async function AccesoPage({ searchParams }: { searchParams: Promi
   const { token } = await searchParams;
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Entrar a MiConjunto</h1>
+      <h1 className="text-2xl font-bold">Entrar a Conjunto360</h1>
       <p className="text-sm text-muted-foreground">Toca el botón para iniciar sesión con tu enlace de acceso.</p>
       <form action={magicLoginAction}>
         <input type="hidden" name="token" value={token ?? ""} />

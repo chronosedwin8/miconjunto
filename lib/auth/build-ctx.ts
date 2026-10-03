@@ -47,7 +47,7 @@ export async function buildCtx(userId: string, conjuntoId: string, opts?: { impe
   let permisos: Set<string>;
   let rolClave = "SUPERADMIN";
   let rolBase = "ADMINISTRADOR";
-  let rolNombre = "SuperAdmin MiConjunto";
+  let rolNombre = "SuperAdmin Conjunto360";
   if (membresia) {
     rolClave = membresia.rol.clave;
     rolBase = membresia.rol.basadoEnClave ?? membresia.rol.clave;

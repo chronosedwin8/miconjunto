@@ -87,10 +87,10 @@ export async function requestMagicLinkAction(_prev: Result | null, formData: For
     const token = await createToken("MAGIC_LINK", { usuarioId: user.id, email, ttlMinutes: 15 });
     await queueBrandedEmail(
       email,
-      "Tu enlace de acceso a MiConjunto",
+      "Tu enlace de acceso a Conjunto360",
       {
-        parrafos: [`Hola ${user.nombre.split(" ")[0]}, usa este botón para entrar a MiConjunto. El enlace vence en 15 minutos y sirve una sola vez.`],
-        boton: { texto: "Entrar a MiConjunto", url: appUrl(`/acceso?token=${token}`) },
+        parrafos: [`Hola ${user.nombre.split(" ")[0]}, usa este botón para entrar a Conjunto360. El enlace vence en 15 minutos y sirve una sola vez.`],
+        boton: { texto: "Entrar a Conjunto360", url: appUrl(`/acceso?token=${token}`) },
       },
       { sendNow: true },
     );

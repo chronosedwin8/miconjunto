@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   if (!tab) return NextResponse.json({ error: "Tablero no disponible" }, { status: 403 });
   const { actual } = await datosTablero(ctx, tab, filtroDesdeParams(sp));
   const wb = new ExcelJS.Workbook();
-  wb.creator = "MiConjunto";
+  wb.creator = "Conjunto360";
   const hoja = (nombre: string, filas: Record<string, unknown>[]) => {
     if (!filas.length) return;
     const ws = wb.addWorksheet(nombre.slice(0, 31));

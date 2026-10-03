@@ -85,7 +85,7 @@ export function CodigoEntrada() {
         onResult={(t) => {
           setScan(false);
           const l = interpretarLectura(t);
-          if (!l) return toast.error("Ese QR no es una autorización de MiConjunto.");
+          if (!l) return toast.error("Ese QR no es una autorización de Conjunto360.");
           router.push(l.token ? `/porteria/ingreso?token=${l.token}` : `/porteria/ingreso?codigo=${l.codigo}`);
         }}
       />

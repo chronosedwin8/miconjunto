@@ -1,6 +1,6 @@
 {
   "app": {
-    "nombre": "MiConjunto",
+    "nombre": "Conjunto360",
     "buscar": "Buscar unidad, persona, placa…",
     "sinConexion": "Sin conexión",
     "pendientesSincronizar": "{count, plural, =0 {Todo sincronizado} one {# registro pendiente por sincronizar} other {# registros pendientes por sincronizar}}"

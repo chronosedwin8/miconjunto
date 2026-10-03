@@ -16,7 +16,7 @@ export default async function PoliticaDatosPage({ searchParams }: { searchParams
     <main className="mx-auto max-w-3xl px-4 py-8 text-[15px] leading-relaxed">
       <p className="mb-2 text-sm text-muted-foreground">
         <Link href="/login" className="underline">
-          MiConjunto
+          Conjunto360
         </Link>
       </p>
       <h1 className="text-2xl font-bold">Política de tratamiento de datos personales</h1>
@@ -46,7 +46,7 @@ export default async function PoliticaDatosPage({ searchParams }: { searchParams
         <div>
           <h2 className="text-lg font-semibold">1. Quiénes tratan tus datos</h2>
           <p>
-            El <b>responsable</b> es la persona jurídica de la propiedad horizontal (el conjunto o edificio) donde tienes tu unidad, representada por su administración. <b>MiConjunto</b> actúa como <b>encargado</b> del
+            El <b>responsable</b> es la persona jurídica de la propiedad horizontal (el conjunto o edificio) donde tienes tu unidad, representada por su administración. <b>Conjunto360</b> actúa como <b>encargado</b> del
             tratamiento: provee la plataforma tecnológica y solo trata los datos siguiendo las instrucciones del responsable.
           </p>
         </div>

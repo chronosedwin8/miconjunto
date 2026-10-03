@@ -5,14 +5,15 @@ import { getMessages } from "next-intl/server";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-sans", subsets: ["latin"], display: "swap" });
+const inter = Inter({ variable: "--font-sans", subsets: ["latin"], display: "optional" });
 
 export const metadata: Metadata = {
-  title: { default: "MiConjunto", template: "%s · MiConjunto" },
+  metadataBase: new URL(process.env.APP_URL ?? "http://localhost:3000"),
+  title: { default: "Conjunto360", template: "%s · Conjunto360" },
   description: "Administración de propiedad horizontal: cartera, portería, reservas, PQRS, asambleas y más.",
-  applicationName: "MiConjunto",
+  applicationName: "Conjunto360",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "MiConjunto", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Conjunto360", statusBarStyle: "default" },
   formatDetection: { telephone: false },
   icons: { icon: "/icons/icon-192.png", apple: "/icons/icon-192.png" },
 };

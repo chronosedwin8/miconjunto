@@ -10,7 +10,7 @@ export async function systemCtx(conjuntoId: string, opts?: { userId?: string; no
   const conjunto = await prisma.conjunto.findUniqueOrThrow({ where: { id: conjuntoId } });
   return {
     userId: opts?.userId ?? "sistema",
-    nombre: opts?.nombre ?? "Sistema MiConjunto",
+    nombre: opts?.nombre ?? "Sistema Conjunto360",
     email: "sistema@miconjunto.co",
     fotoUrl: null,
     textoGrande: false,

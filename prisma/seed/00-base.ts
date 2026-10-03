@@ -43,7 +43,7 @@ export async function seedBase(s: SeedState) {
   const demoHash = await hashPassword("Demo1234*");
 
   const superadmin = await prisma.usuario.create({
-    data: { email: "admin@miconjunto.co", nombre: "Equipo MiConjunto", passwordHash: adminHash, esSuperAdmin: true, politicaAceptadaEn: new Date(), politicaVersion: "1.0" },
+    data: { email: "admin@miconjunto.co", nombre: "Equipo Conjunto360", passwordHash: adminHash, esSuperAdmin: true, politicaAceptadaEn: new Date(), politicaVersion: "1.0" },
   });
   s.users.superadmin = superadmin.id;
 

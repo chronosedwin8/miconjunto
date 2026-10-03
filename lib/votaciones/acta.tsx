@@ -22,7 +22,7 @@ export async function actaVotacionPdf(ctx: Ctx, id: string) {
   const qr = verificacion ? await QRCode.toDataURL(verificacion, { margin: 1, width: 240 }) : null;
 
   const doc = (
-    <Document title={`Acta de votación — ${v.pregunta}`} author="MiConjunto">
+    <Document title={`Acta de votación — ${v.pregunta}`} author="Conjunto360">
       <Page size="A4" style={pdfStyles.page}>
         <PdfHeader
           conjunto={conjunto}
@@ -110,7 +110,7 @@ export async function actaVotacionPdf(ctx: Ctx, id: string) {
             </View>
           </View>
         ) : null}
-        <PdfFooter texto={`Acta de votación generada por MiConjunto el ${fechaHora(new Date())}`} />
+        <PdfFooter texto={`Acta de votación generada por Conjunto360 el ${fechaHora(new Date())}`} />
       </Page>
     </Document>
   );

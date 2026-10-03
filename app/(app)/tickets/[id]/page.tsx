@@ -156,7 +156,7 @@ export default async function TicketPage({ params, searchParams }: { params: Pro
                     </span>
                     <div className={cn("rounded-xl border p-3", c.interno ? "border-amber-300 bg-amber-50 dark:bg-amber-950/30" : c.tipo === "COMENTARIO" ? (esResidente ? "bg-muted/40" : "bg-card") : "border-dashed bg-transparent")}>
                       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                        <span className="font-medium text-foreground">{c.autor?.nombre ?? (c.tipo === "SISTEMA" ? "MiConjunto" : (t.solicitanteNombre ?? "Sistema"))}</span>
+                        <span className="font-medium text-foreground">{c.autor?.nombre ?? (c.tipo === "SISTEMA" ? "Conjunto360" : (t.solicitanteNombre ?? "Sistema"))}</span>
                         <span>{fechaHora(c.createdAt)}</span>
                         {c.interno && <Badge variant="warning">Interno</Badge>}
                         {aEstado && <StatusBadge value={aEstado} />}

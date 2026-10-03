@@ -38,7 +38,7 @@ export function PdfHeader({ conjunto, derecha }: { conjunto: ConjuntoPdf; derech
 export function PdfFooter({ texto }: { texto?: string }) {
   return (
     <View style={pdfStyles.footer} fixed>
-      <Text>{texto ?? "Generado por MiConjunto"}</Text>
+      <Text>{texto ?? "Generado por Conjunto360"}</Text>
       <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
     </View>
   );
@@ -87,7 +87,7 @@ export async function renderPdf(doc: React.ReactElement) {
 /** Reporte tabular genérico (exportaciones PDF de listas). */
 export function TablaPdf({ titulo, subtitulo, conjunto, columns, rows }: { titulo: string; subtitulo?: string; conjunto: ConjuntoPdf; columns: PdfCol[]; rows: Record<string, React.ReactNode>[] }) {
   return (
-    <Document title={titulo} author="MiConjunto">
+    <Document title={titulo} author="Conjunto360">
       <Page size="A4" orientation={columns.length > 6 ? "landscape" : "portrait"} style={pdfStyles.page}>
         <PdfHeader conjunto={conjunto} derecha={<Text style={pdfStyles.muted}>{new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" })}</Text>} />
         <Text style={pdfStyles.title}>{titulo}</Text>

@@ -97,7 +97,7 @@ export function plantillaConvocatoria(conjunto: string, a: Pick<Asamblea, "tipo"
     ``,
     `La administración de ${conjunto}, en cumplimiento de la Ley 675 de 2001 y del reglamento de propiedad horizontal, convoca a todos los propietarios a la asamblea general ${a.tipo === "ORDINARIA" ? "ordinaria" : "extraordinaria"} que se realizará el ${fechaLarga(a.fecha)} a las ${hora(a.fecha)}, en modalidad ${MODALIDAD[a.modalidad]}.`,
     a.lugar ? `Lugar: ${a.lugar}.` : "",
-    a.enlace ? `Enlace de conexión: ${a.enlace}. Las votaciones se realizan en la app MiConjunto.` : "",
+    a.enlace ? `Enlace de conexión: ${a.enlace}. Las votaciones se realizan en la app Conjunto360.` : "",
     ``,
     `Orden del día propuesto:`,
     ...puntos.map((p) => `${p.orden}. ${p.titulo}`),
