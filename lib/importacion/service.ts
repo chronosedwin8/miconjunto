@@ -8,6 +8,7 @@ import { cuotaAdministracion } from "@/lib/cartera/calculos";
 import { crearCargo } from "@/lib/cartera/core";
 import { invitarUsuario } from "@/lib/usuarios/service";
 import { validarCoeficientes } from "@/lib/conjunto/service";
+import { normalizarPlaca, placaValida } from "@/lib/residentes/calculos";
 
 export const TIPOS_IMPORTACION = {
   UNIDADES: {
@@ -32,6 +33,16 @@ export const TIPOS_IMPORTACION = {
     ejemplo: [
       ["T1-101", "ADMINISTRACION", "780000", "2026-08-10", "2026-08", "Saldo de administración a la fecha de inicio"],
       ["T1-101", "INTERES_MORA", "24500", "2026-08-31", "2026-08", "Intereses acumulados a la fecha de inicio"],
+    ],
+  },
+  VEHICULOS: {
+    titulo: "Vehículos de residentes",
+    plantilla: "vehiculos.xlsx",
+    columnas: ["unidad", "placa", "tipo", "marca", "modelo", "color", "soat_vence", "tecnomecanica_vence", "parqueadero"],
+    requeridas: ["unidad", "placa"],
+    ejemplo: [
+      ["T1-101", "ABC123", "CARRO", "Mazda", "CX-30", "Gris", "2027-03-15", "2027-05-20", "P-001"],
+      ["T1-101", "XYZ12D", "MOTO", "Yamaha", "NMAX", "Negro", "2027-01-10", "", ""],
     ],
   },
   ZONAS: {
@@ -88,6 +99,8 @@ const DOCS = ["CC", "CE", "TI", "RC", "PA", "NIT", "PEP", "PPT"];
 const CONCEPTOS = ["ADMINISTRACION", "EXTRAORDINARIA", "MULTA", "INTERES_MORA", "ALQUILER_ZONA", "PARQUEADERO", "SERVICIO", "OTRO"];
 const CATEGORIAS = ["SALON", "PISCINA", "GIMNASIO", "BBQ", "CANCHA", "JUEGOS", "TERRAZA", "SALA_JUNTAS", "COWORKING", "OTRA"];
 const TIPOS_PARQ = ["PRIVADO", "COMUN", "VISITANTES", "MOTO", "BICICLETA", "DISCAPACIDAD"];
+const TIPOS_VEHICULO = ["CARRO", "MOTO", "BICICLETA", "OTRO"] as const;
+const fechaInvalida = (v: string | undefined) => !!v?.trim() && Number.isNaN(parseLocal(v.trim().slice(0, 10)).getTime());
 
 /** Valida fila por fila. No escribe en la BD. */
 export async function validarImportacion(ctx: Ctx, tipo: TipoImportacion, filas: Record<string, string>[]) {
@@ -96,6 +109,9 @@ export async function validarImportacion(ctx: Ctx, tipo: TipoImportacion, filas:
   const err = (fila: number, campo: string, mensaje: string) => errores.push({ fila, campo, mensaje });
   const unidades = new Map((await ctx.db.unidad.findMany({ select: { id: true, codigo: true } })).map((u) => [u.codigo.toUpperCase(), u.id]));
   const vistos = new Set<string>();
+  const placasBd =
+    tipo === "VEHICULOS" ? new Map((await ctx.db.vehiculo.findMany({ select: { placa: true, unidad: { select: { codigo: true } } } })).map((v) => [v.placa, v.unidad.codigo.toUpperCase()])) : new Map<string, string>();
+  const parqueaderos = tipo === "VEHICULOS" ? new Set((await ctx.db.parqueadero.findMany({ select: { codigo: true } })).map((p) => p.codigo.toUpperCase())) : new Set<string>();
 
   filas.forEach((f, i) => {
     const n = i + 2; // fila de Excel (1 = encabezado)
@@ -130,6 +146,25 @@ export async function validarImportacion(ctx: Ctx, tipo: TipoImportacion, filas:
         if (f.valor && (Number.isNaN(v) || v <= 0)) err(n, "valor", "Debe ser un valor mayor a cero");
         if (f.fecha_vencimiento && Number.isNaN(parseLocal(f.fecha_vencimiento.slice(0, 10)).getTime())) err(n, "fecha_vencimiento", "Fecha no válida (AAAA-MM-DD)");
         if (f.periodo && !/^\d{4}-\d{2}$/.test(f.periodo.trim())) err(n, "periodo", "Formato AAAA-MM");
+        break;
+      }
+      case "VEHICULOS": {
+        const unidad = f.unidad?.trim().toUpperCase();
+        if (unidad && !unidades.has(unidad)) err(n, "unidad", `La unidad ${f.unidad} no existe (impórtela primero)`);
+        const tipoV = f.tipo ? up(f.tipo) : "CARRO";
+        if (f.tipo && !(TIPOS_VEHICULO as readonly string[]).includes(tipoV)) err(n, "tipo", `Tipo no válido. Use: ${TIPOS_VEHICULO.join(", ")}`);
+        if (f.placa?.trim()) {
+          const placa = normalizarPlaca(f.placa);
+          if ((TIPOS_VEHICULO as readonly string[]).includes(tipoV) && !placaValida(placa, tipoV as (typeof TIPOS_VEHICULO)[number]))
+            err(n, "placa", tipoV === "MOTO" ? "Placa de moto no válida (ej. ABC12D)" : tipoV === "CARRO" ? "Placa de carro no válida (ej. ABC123)" : "Placa no válida");
+          if (vistos.has(placa)) err(n, "placa", "Placa repetida en el archivo");
+          vistos.add(placa);
+          const enBd = placasBd.get(placa);
+          if (enBd && unidad && enBd !== unidad) err(n, "placa", `La placa ya está registrada en ${enBd}`);
+        }
+        if (fechaInvalida(f.soat_vence)) err(n, "soat_vence", "Fecha no válida (AAAA-MM-DD)");
+        if (fechaInvalida(f.tecnomecanica_vence)) err(n, "tecnomecanica_vence", "Fecha no válida (AAAA-MM-DD)");
+        if (f.parqueadero?.trim() && !parqueaderos.has(f.parqueadero.trim().toUpperCase())) err(n, "parqueadero", `El parqueadero ${f.parqueadero} no existe (impórtelo primero)`);
         break;
       }
       case "ZONAS": {
@@ -283,6 +318,33 @@ export async function aplicarImportacion(ctx: Ctx, importacionId: string) {
             origen: "APERTURA",
           });
           creados++;
+          break;
+        }
+        case "VEHICULOS": {
+          const uid = (await unidadId(f.unidad))!;
+          const placa = normalizarPlaca(f.placa);
+          const fecha = (v?: string) => (v?.trim() ? parseLocal(v.trim().slice(0, 10)) : null);
+          const parq = f.parqueadero?.trim() ? await ctx.db.parqueadero.findFirst({ where: { codigo: { equals: f.parqueadero.trim(), mode: "insensitive" } } }) : null;
+          const data = {
+            unidadId: uid,
+            tipo: (f.tipo ? up(f.tipo) : "CARRO") as never,
+            marca: f.marca?.trim() || null,
+            modelo: f.modelo?.trim() || null,
+            color: f.color?.trim() || null,
+            soatVence: fecha(f.soat_vence),
+            tecnomecanicaVence: fecha(f.tecnomecanica_vence),
+            parqueaderoId: parq?.id ?? null,
+            activo: true,
+          };
+          // La placa es única por conjunto (incluye registros borrados, que se reactivan).
+          const ex = await ctx.db.vehiculo.findFirst({ where: { placa, deletedAt: undefined } });
+          if (ex) {
+            await ctx.db.vehiculo.update({ where: { id: ex.id }, data: { ...data, deletedAt: null } });
+            actualizados++;
+          } else {
+            await ctx.db.vehiculo.create({ data: { ...data, conjuntoId: ctx.conjuntoId, placa } });
+            creados++;
+          }
           break;
         }
         case "ZONAS": {

@@ -44,7 +44,7 @@ export const UTILIDADES: Utilidad[] = [
   { icono: PackageCheck, titulo: "Paquetería", texto: "El residente recibe aviso cuando llega su paquete y lo reclama con firma digital. Solo lo entregan a personas autorizadas." },
   { icono: CalendarCheck, titulo: "Reservas de zonas comunes", texto: "Calendario sin cruces, reglas por zona, cobro en línea con factura electrónica y check-in con acta de entrega." },
   { icono: LifeBuoy, titulo: "PQRS con radicado", texto: "Cada solicitud con número, tiempos de respuesta en días hábiles, tablero Kanban y calificación del servicio." },
-  { icono: Vote, titulo: "Asambleas y votaciones", texto: "Quórum y mayorías por coeficiente según la Ley 675, poderes, asistencia con QR, voto secreto y actas en PDF.", destacado: true },
+  { icono: Vote, titulo: "Asambleas y votaciones", texto: "Quórum y mayorías por coeficiente según la Ley 675, poderes, asistencia con QR, voto secreto y acta firmada en PDF.", destacado: true },
   { icono: Megaphone, titulo: "Comunicación", texto: "Muro del conjunto, correo masivo por torre o segmento, notificaciones push y mensajes por WhatsApp." },
   { icono: Gavel, titulo: "Convivencia con debido proceso", texto: "Llamados de atención y multas con descargos (art. 59 Ley 675); la multa llega a cartera solo cuando queda en firme." },
   { icono: Wrench, titulo: "Mantenimiento y activos", texto: "Hoja de vida de equipos con QR, mantenimientos preventivos, órdenes de trabajo, proveedores y contratos con alertas." },
@@ -74,6 +74,6 @@ export const PREGUNTAS: Pregunta[] = [
   { p: "¿Qué pasa si se cae el internet en la portería?", r: "La portería sigue registrando ingresos, salidas y paquetes sin conexión. Cuando vuelve el internet, todo se sincroniza solo y sin duplicados." },
   { p: "¿Puedo traer la información que tengo en Excel?", r: "Sí. Importamos unidades, coeficientes, propietarios, residentes, vehículos y saldos iniciales de cartera desde plantillas de Excel, con validación fila por fila." },
   { p: "¿Cómo protegen los datos personales?", r: "Cumplimos la Ley 1581 de 2012: consentimiento informado, política de tratamiento, derechos de consulta, corrección y supresión desde la app, datos aislados por conjunto, auditoría y copias de seguridad diarias." },
-  { p: "¿Sirve para asambleas virtuales o mixtas?", r: "Sí. La asistencia se registra con QR o en línea, el quórum se calcula por coeficiente en tiempo real, se manejan poderes y las votaciones generan el acta en PDF." },
+  { p: "¿Sirve para asambleas virtuales o mixtas?", r: "Sí. La asistencia se registra con QR o en línea, el quórum se calcula por coeficiente en tiempo real, se manejan poderes y, al terminar, el acta se redacta con los resultados para firmarla en pantalla y publicarla en PDF." },
   { p: "¿Cómo funciona el descuento multiconjunto?", r: "Si contratas más de 3 conjuntos en el plan Multiconjunto, se aplica un 10 % de descuento sobre el valor total de la factura anual. Por ejemplo, 4 conjuntos: $16.000.000 − 10 % = $14.400.000 al año." },
 ];

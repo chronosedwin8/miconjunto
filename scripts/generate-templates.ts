@@ -7,7 +7,7 @@ async function main() {
   fs.mkdirSync("public/plantillas", { recursive: true });
   for (const [tipo, def] of Object.entries(TIPOS_IMPORTACION)) {
     const wb = new ExcelJS.Workbook();
-    wb.creator = "MiConjunto";
+    wb.creator = "Conjunto360";
     const ws = wb.addWorksheet("Datos");
     ws.columns = def.columnas.map((c) => ({ header: c, key: c, width: Math.max(14, c.length + 4) }));
     ws.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };

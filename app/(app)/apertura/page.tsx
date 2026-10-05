@@ -43,7 +43,19 @@ export default async function AperturaPage({ searchParams }: { searchParams: Pro
         </>
       ),
     },
-    { n: 3, titulo: "Propietarios y residentes", ok: vinculos > 0, contenido: <><p className="mb-3 text-sm">{vinculos} vínculos registrados. Marca “invitar = SI” para enviarles el acceso.</p><Importer tipos={tipo("PROPIETARIOS")} fijo="PROPIETARIOS" aplicar={aplicarImportacionAction} /></> },
+    {
+      n: 3,
+      titulo: "Propietarios, residentes y vehículos",
+      ok: vinculos > 0,
+      contenido: (
+        <div className="space-y-4">
+          <p className="text-sm">{vinculos} vínculos registrados. Marca “invitar = SI” para enviarles el acceso.</p>
+          <Importer tipos={tipo("PROPIETARIOS")} fijo="PROPIETARIOS" aplicar={aplicarImportacionAction} />
+          <p className="text-sm">Después de las unidades (y de los parqueaderos, si los asignas), carga los vehículos de los residentes.</p>
+          <Importer tipos={tipo("VEHICULOS")} fijo="VEHICULOS" aplicar={aplicarImportacionAction} />
+        </div>
+      ),
+    },
     {
       n: 4,
       titulo: "Cuotas vigentes y saldos iniciales",

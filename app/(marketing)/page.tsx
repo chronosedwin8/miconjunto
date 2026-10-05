@@ -51,7 +51,7 @@ const DESTACADOS = [
     id: "asambleas",
     eyebrow: "Gobierno del conjunto",
     titulo: "Asambleas y votaciones sin enredos",
-    texto: "El quórum y las mayorías se calculan por coeficiente, tal como exige la Ley 675. Registra asistencia con QR, gestiona poderes, vota en vivo desde el celular y obtén el acta en PDF al terminar.",
+    texto: "El quórum y las mayorías se calculan por coeficiente, tal como exige la Ley 675. Registra asistencia con QR, gestiona poderes, vota en vivo desde el celular y, al terminar, el acta se redacta sola para firmarla en pantalla y publicarla en PDF.",
     puntos: ["Quórum en vivo y proyección en la sala", "Voto secreto con comprobante", "Encuestas rápidas para la comunidad"],
     celular: { src: "/marketing/app-votaciones.webp", alt: "Votaciones del conjunto en la app de Conjunto360" },
     panel: { src: "/marketing/panel-asambleas.webp", alt: "Gestión de asambleas en el panel de Conjunto360" },

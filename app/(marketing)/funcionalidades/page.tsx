@@ -77,7 +77,7 @@ const GRUPOS: Grupo[] = [
       "Asambleas presenciales, virtuales o mixtas con quórum por coeficiente",
       "Poderes, asistencia con QR y proyección del quórum en vivo",
       "Votaciones con mayoría simple o calificada y voto secreto",
-      "Actas en PDF firmadas y publicadas",
+      "Acta redactada sola al terminar, firmada en pantalla y publicada en PDF",
       "Consejo de administración con aprobaciones pendientes",
       "Llamados de atención y multas con debido proceso (art. 59)",
       "Encuestas rápidas a toda la comunidad o por segmento",
